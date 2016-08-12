@@ -32,7 +32,7 @@ class WebMFT_Post_SEO {
 	function webmft_post_most_viewed($args=''){
 		global $wpdb,$post;
 		parse_str($args, $i);
-		$num    = isset($i['num']) ? $i['num']:25;
+		$num    = isset($i['num']) ? $i['num']:5;
 		$key    = isset($i['key']) ? $i['key']:'views';
 		$order  = isset($i['order']) ? 'ASC':'DESC';
 		$cache  = isset($i['cache']) ? 1:0;
@@ -65,20 +65,20 @@ class WebMFT_Post_SEO {
 
 		$out= '<ul>';
 		preg_match( '!{date:(.*?)}!', $format, $date_m );
-		foreach( $results as $pst ){
-			$x == 'li1' ? $x = 'li2' : $x = 'li1';
-			if ( (int)$pst->ID == (int)$cur_postID ) $x .= " current-item";
-			$Title = $pst->post_title;
-			$a1 = "<a href='". get_permalink($pst->ID) ."' title='{$pst->views} просмотров: $Title'>";
+		foreach( $results as $val ){
+
+			if ( (int)$val->ID == (int)$cur_postID ) $x .= " current-item";
+			$title = $val->post_title;
+			$a1 = "<a href='". get_permalink($val->ID) ."' title='{$val->views} просмотров: $title'>";
 			$a2 = "</a>";
-			$comments = $pst->comment_count;
-			$views = $pst->views;
+			$comments = $val->comment_count;
+			$views = $val->views;
 			if( $format ){
-				$date = apply_filters('the_time', mysql2date($date_m[1],$pst->post_date));
+				$date = apply_filters('the_time', mysql2date($date_m[1],$val->post_date));
 				$Sformat = str_replace ($date_m[0], $date, $format);
-				$Sformat = str_replace(array('{a}','{title}','{/a}','{comments}','{views}'), array($a1,$Title,$a2,$comments,$views), $Sformat);
+				$Sformat = str_replace(array('{a}','{title}','{/a}','{comments}','{views}'), array($a1,$title,$a2,$comments,$views), $Sformat);
 			}
-			else $Sformat = $a1.$Title.$a2;
+			else $Sformat = $a1.$title.$a2;
 			$out .= "<li class='$x'>$Sformat</li>";
 		}
 		$out .= "</ul>";
@@ -91,32 +91,32 @@ class WebMFT_Post_SEO {
 			return $out;
 	}
 
-	function webmft_post_prev($post_num=1, $format='{date:j.M.Y} - {a}{title}{/a}', $cache=1, $post_type='post'){
+	function webmft_post_prev(){
 		global $post, $wpdb;
+		$cache = 1;
 
 		$cache_key = (string) md5( __FUNCTION__ . $post->ID );
 		$cache_flag = __FUNCTION__;
 		if ($cache && $cache_out = wp_cache_get($cache_key, $cache_flag)) return $cache_out;
+
 		$sql = "
 			SELECT ID, post_title, post_date, comment_count, guid
 			FROM $wpdb->posts p
-			WHERE p.ID < {$post->ID}
+			WHERE p.ID < $post->ID
 				AND p.post_status = 'publish'
-				AND p.post_type = '$post_type'
+				AND p.post_type = 'post'
 			ORDER BY p.ID DESC
 			LIMIT 1
 		";
 		$res = $wpdb->get_results($sql);
 
-		$count_res = count($res);
-		// если количество меньше нужного, делаем 2-й запрос (кольцевая перелинковка)
 		if (!$res){
 			$sql = "
 				SELECT ID, post_title, post_date, comment_count, guid
 				FROM $wpdb->posts p
-				WHERE p.ID > {$post->ID}
+				WHERE p.ID > $post->ID
 					AND p.post_status = 'publish'
-					AND p.post_type = '$post_type'
+					AND p.post_type = 'post'
 				ORDER BY p.ID DESC
 				LIMIT 1
 			";
@@ -124,32 +124,31 @@ class WebMFT_Post_SEO {
 		}
 
 		if(!$res) return false;
-		// Формировка вывода
-		if ($format) preg_match ('!\{date:(.*?)\}!', $format, $date_m);
-		foreach ($res as $pst){
-			$x = ($x == 'li1') ?  'li2' : 'li1';
-			$Title = stripslashes($pst->post_title);
-			$a = "<a href='". get_permalink($pst->ID) ."' title='{$Title}'>"; //get_permalink($pst->ID) меняем на $pst->guid если настроено поле guid
 
-			if($format){
-				$Sformat = strtr($format, array(
-					'{title}'     => $Title
-					,'{a}'        => $a
-					,'{/a}'       => '</a>'
-					,'{comments}' => ($pst->comment_count==0) ? '' : $pst->comment_count
-				));
-				if($date_m)
-					$Sformat = str_replace($date_m[0], apply_filters('the_time', mysql2date($date_m[1], $pst->post_date)), $Sformat);
-			}
-			else
-				$Sformat = "$a$Title</a>";
+		foreach ($res as $val){
 
-			$out .= "\t<li class='$x'>$Sformat</li>\n";
+			$sql = "
+				SELECT w.meta_value
+				FROM $wpdb->postmeta w
+					LEFT JOIN $wpdb->postmeta p ON (p.meta_value = w.post_id)
+				WHERE p.meta_key = '_thumbnail_id'
+					AND p.post_id = $val->ID
+					AND w.meta_key = '_wp_attached_file'
+				LIMIT 1
+			";
+			// var_dump($sql);
+			$resTH = $wpdb->get_results($sql);
+			$temp = str_replace('.jpg', '-150x150.jpg', $resTH[0]->meta_value);
+			$temp = str_replace('.png', '-150x150.png', $resTH[0]->meta_value);
+			$title = stripslashes($val->post_title);
+			//get_permalink($val->ID) меняем на $val->guid если настроено поле guid
+
+			$out .= '<li><a class="item" href="'.get_permalink($val->ID).'" title="'.$title.'"><img src="/wp-content/uploads/'.$temp.'" alt="'.$title.'"></a></li>';
 		}
 
 		if($cache) wp_cache_add($cache_key, $out, $cache_flag);
 
-		return '<ul>'. $out .'</ul>';
+		return '<ul class="list-unstyled" style="padding-left:0;list-style:none;">'. $out .'</ul>';
 	}
 
 	function webmft_post_next($post_num=5, $format='{date:j.M.Y} - {a}{title}{/a}', $cache=1, $post_type='post'){
@@ -192,23 +191,23 @@ class WebMFT_Post_SEO {
 		if(!$res) return false;
 		// Формировка вывода
 		if ($format) preg_match ('!\{date:(.*?)\}!', $format, $date_m);
-		foreach ($res as $pst){
+		foreach ($res as $val){
 			$x = ($x == 'li1') ?  'li2' : 'li1';
-			$Title = stripslashes($pst->post_title);
-			$a = "<a href='". get_permalink($pst->ID) ."' title='{$Title}'>"; //get_permalink($pst->ID) меняем на $pst->guid если настроено поле guid
+			$title = stripslashes($val->post_title);
+			$a = "<a href='". get_permalink($val->ID) ."' title='{$title}'>"; //get_permalink($val->ID) меняем на $val->guid если настроено поле guid
 
 			if($format){
 				$Sformat = strtr($format, array(
-					'{title}'     => $Title
+					'{title}'     => $title
 					,'{a}'        => $a
 					,'{/a}'       => '</a>'
-					,'{comments}' => ($pst->comment_count==0) ? '' : $pst->comment_count
+					,'{comments}' => ($val->comment_count==0) ? '' : $val->comment_count
 				));
 				if($date_m)
-					$Sformat = str_replace($date_m[0], apply_filters('the_time', mysql2date($date_m[1], $pst->post_date)), $Sformat);
+					$Sformat = str_replace($date_m[0], apply_filters('the_time', mysql2date($date_m[1], $val->post_date)), $Sformat);
 			}
 			else
-				$Sformat = "$a$Title</a>";
+				$Sformat = "$a$title</a>";
 
 			$out .= "\t<li class='$x'>$Sformat</li>\n";
 		}
