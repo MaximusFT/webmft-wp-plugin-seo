@@ -1,6 +1,6 @@
 # WebMFT: Plugin SEO useful
 
-=== Plugin Name ===
+## Plugin Name
 Stable tag: 1
 Tested up to: 4.5.2
 License: GPLv2 or later
