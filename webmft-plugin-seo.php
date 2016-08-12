@@ -24,12 +24,12 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-define('KAP_PATH', plugin_dir_path( __FILE__ ) );
-define('KAP_URL', plugin_dir_url( __FILE__ ) );
-define('KAP_BASE', plugin_basename(__FILE__) );
+define('MFT_PATH', plugin_dir_path( __FILE__ ) );
+define('MFT_URL', plugin_dir_url( __FILE__ ) );
+define('MFT_BASE', plugin_basename(__FILE__) );
 
-require_once KAP_PATH . 'class.WebMFT_Postviews.php';
-require_once KAP_PATH . 'class.WebMFT_Post_SEO.php';
+require_once MFT_PATH . 'class.WebMFT_Postviews.php';
+require_once MFT_PATH . 'class.WebMFT_Post_SEO.php';
 
 // init
 add_action('plugins_loaded', function(){
