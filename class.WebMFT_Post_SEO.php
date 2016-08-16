@@ -121,14 +121,11 @@ class WebMFT_Post_SEO {
 					AND w.meta_key = '_wp_attached_file'
 				LIMIT 1
 			";
-			// var_dump($sql);
 			$resTH = $wpdb->get_results($sql);
-			$temp = str_replace('.jpg', '-150x150.jpg', $resTH[0]->meta_value);
-			$temp = str_replace('.png', '-150x150.png', $resTH[0]->meta_value);
 			$title = stripslashes($val->post_title);
 			//get_permalink($val->ID) меняем на $val->guid если настроено поле guid
 
-			$out .= '<li><a class="item" href="'.get_permalink($val->ID).'" title="'.$title.'"><img src="/wp-content/uploads/'.$temp.'" alt="'.$title.'"></a></li>';
+			$out .= '<li><a class="item" href="'.get_permalink($val->ID).'" title="'.$title.'"><img src="/wp-content/uploads/'.$resTH[0]->meta_value.'" alt="'.$title.'"></a></li>';
 		}
 
 		if($cache) wp_cache_add($cache_key, $out, $cache_flag);
