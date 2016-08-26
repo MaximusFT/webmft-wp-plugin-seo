@@ -5,13 +5,14 @@
 * Tags: postviews, prev post, next post, most viewed
 * Requires at least: 3.0.1
 * Tested up to: 4.5.3
-* Stable tag: 1
+* Stable tag: 1.3
 * License: GPLv2 or later
 * License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 ## Description
 
-Counts visits of post or tax term. Plugin take 3 sidebar shortcodes for: Prev post (img from thumb), Next posts, Most viewed
+Counts visits of post or tax term. Plugin take 3 sidebar shortcodes for: Prev post (img from thumb), Next posts, Most viewed.
+Control Meta and Title
 
 ## Installation
 
@@ -25,10 +26,13 @@ This section describes how to install the plugin and get it working.
 
 ## Changelog
 
+= 1.2 =
+* Add to Post Meta & Title, View and Admin
+
 = 1.0 =
 * First release
 
-## AutoInstall
+## AutoInstall to Widget
 <dl>
   <dt>Table</dt>
   <dd>wp_options</dd>
