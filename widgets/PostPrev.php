@@ -58,7 +58,10 @@ class WEBMFT_PostPrev_Widget extends WP_Widget {
 			$res = $wpdb->get_results($sql);
 		}
 
-		if(!$res) return false;
+		if(!$res) {
+			echo $args['after_widget'];
+			return false;
+		}
 
 		foreach ($res as $val){
 

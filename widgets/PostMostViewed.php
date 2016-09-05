@@ -59,7 +59,10 @@ class WEBMFT_PostMostViewed_Widget extends WP_Widget {
 		ORDER BY views $order LIMIT $num";
 		$res = $wpdb->get_results($sql);
 
-		if(!$res) return false;
+		if(!$res) {
+			echo $args['after_widget'];
+			return false;
+		}
 
 		foreach($res as $val){
 			if ((int)$val->ID == (int)$cur_postID) $classActive = "active";

@@ -57,7 +57,10 @@ class WEBMFT_PostNext_Widget extends WP_Widget {
 			$res = array_merge($res,$res2);
 		}
 
-		if(!$res) return false;
+		if(!$res) {
+			echo $args['after_widget'];
+			return false;
+		}
 
 		foreach ($res as $val){
 			$title = stripslashes($val->post_title);
