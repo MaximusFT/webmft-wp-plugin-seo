@@ -78,9 +78,9 @@ class WEBMFT_PostPrev_Widget extends WP_Widget {
 			$title = stripslashes($val->post_title);
 			//get_permalink($val->ID) меняем на $val->guid если настроено поле guid
 
-			$out .= '<li><a class="item" href="'.get_permalink($val->ID).'" title="'.$title.'"><img src="/wp-content/uploads/'.$resTH[0]->meta_value.'" alt="'.$title.'"></a></li>';
+			$out .= '<div><a class="item" href="'.get_permalink($val->ID).'" title="'.$title.'"><img src="/wp-content/uploads/'.$resTH[0]->meta_value.'" alt="'.$title.'"></a></div>';
 		}
-		$out = '<ul class="post-prev list-unstyled">'. $out .'</ul>';
+		$out = '<div class="post-prev list-unstyled">'. $out .'</div>';
 
 		if($cache) wp_cache_add($cache_key, $out, $cache_flag);
 

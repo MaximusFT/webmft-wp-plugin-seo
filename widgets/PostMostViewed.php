@@ -68,10 +68,10 @@ class WEBMFT_PostMostViewed_Widget extends WP_Widget {
 			if ((int)$val->ID == (int)$cur_postID) $classActive = "active";
 			else $classActive = '';
 			$title = $val->post_title;
-			$out .= '<li class="'.$classActive.'"><a class="item" href="'.get_permalink($val->ID).'" title="'.$val->views.' views: '.$title.'">'.$title.'</a></li>';
+			$out .= '<div class="'.$classActive.'"><a class="item" href="'.get_permalink($val->ID).'" title="'.$val->views.' views: '.$title.'">'.$title.'</a></div>';
 		}
 
-		$out = '<ul class="post-most-viewed">'. $out .'</ul>';
+		$out = '<div class="post-most-viewed">'. $out .'</div>';
 
 		if($cache) wp_cache_add($cache_key, $out);
 

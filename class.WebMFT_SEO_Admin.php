@@ -36,6 +36,7 @@ class WebMFT_SEO_Admin extends WebMFT_SEO {
                 <h2 class="nav-tab-wrapper webmft-tab-wrapper js-tab-wrapper">
                     <a class="nav-tab nav-tab-active" id="postview-tab" href="#top#postview">Post viewes</a>
                     <a class="nav-tab" id="postmeta-tab" href="#top#postmeta">Post Meta & Title</a>
+                    <a class="nav-tab" id="analytics-tab" href="#top#analytics">Analytic`s</a>
                 </h2>
 
                 <div id="postview" class="wp-webmft-tab js-tab-item active">
@@ -64,7 +65,7 @@ class WebMFT_SEO_Admin extends WebMFT_SEO {
 	                    <p class="form-text">How many seconds to delay and then count visit?</p>
                 	</div>
 				</div>
-				<div id="postmeta" class="wp-webmft-tab js-tab-item">
+                <div id="postmeta" class="wp-webmft-tab js-tab-item">
                     <h3>Post Meta & Title</h3>
                     <div class="row">
                         <div class="col-md-5">
@@ -88,6 +89,27 @@ class WebMFT_SEO_Admin extends WebMFT_SEO {
                             <div class="form-group">
                                 <label for="postmeta_front_keywords">Keywords</label>
                                 <?php $this->display_input_text('postmeta_front_keywords') ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+				<div id="analytics" class="wp-webmft-tab js-tab-item">
+                    <h3>Analytic`s</h3>
+                    <h3>Yandex Metrica</h3>
+                    <div class="row">
+                        <div class="col-md-5">
+                            <div class="checkbox">
+                                <label for="postmeta_is">
+                                    <?php $this->display_checkbox('analytics_yandex_is') ?>
+                                        Gloabal Yandex Metrica is active?
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <h4>Yandex Metrica ID</h4>
+                            <div class="form-group">
+                                <label for="postmeta_front_title">ID</label>
+                                <?php $this->display_input_text('analytics_yandex_id') ?>
                             </div>
                         </div>
                     </div>

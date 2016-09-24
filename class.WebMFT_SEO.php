@@ -14,14 +14,12 @@ class WebMFT_SEO {
 
 	function __construct(){
         $this->plugin_name      = 'webmft-seo-useful';
-        // $this->api_url          = 'http://wpshop.biz/api.php';
-        // $this->api_update_url   = 'https://api.wpgenerator.ru/wp-update-server/?action=get_metadata&slug=' . $this->plugin_name;
-        // $this->check_license    = $this->check_license();
 
 		$this->options = ($opt = get_option($this->option_name))? $opt : $this->def_opt();
 
 		add_action('wp_head', 'webmft_seo');
 		add_filter('widget_text', 'do_shortcode');
+		add_theme_support('title-tag');
 
 		if (!is_admin() && isset($this->options['postview_is'])){
 			add_action('wp_enqueue_scripts', create_function('','wp_enqueue_script("jquery");'));
@@ -33,6 +31,17 @@ class WebMFT_SEO {
 			add_action('wp_head', array (&$this, 'header_meta'), 1);
 		}
 
+		if (!is_admin() && isset($this->options['analytics_yandex_is'])){
+			add_action( 'wp_footer', array( $this, 'analytics_yandex' ) );
+		}
+
+		remove_action('wp_head', 'wp_print_scripts');
+		add_action('wp_footer', 'wp_print_scripts', 5);
+		remove_action('wp_head', 'wp_print_head_scripts', 9);
+		add_action('wp_footer', 'wp_print_head_scripts', 5);
+		// remove_action('wp_head', 'wp_enqueue_scripts', 1);
+		// add_action('wp_footer', 'wp_enqueue_scripts', 5);
+
 		add_action('widgets_init', array (&$this, 'register_webmft_widgets'));
 
 		add_shortcode('webmft_post_most_viewed', array (&$this, 'post_most_viewed'));
@@ -41,18 +50,22 @@ class WebMFT_SEO {
         /**
          * Add css and js files
          */
-    	add_action('wp_enqueue_scripts', array( $this, 'enqueue_site_styles') );
+    	// add_action('wp_enqueue_scripts', array( $this, 'enqueue_site_styles') );
 		if (is_admin()){
     		add_action('admin_enqueue_scripts', array( $this, 'enqueue_admin_styles') );
         	add_action('admin_enqueue_scripts', array( $this, 'enqueue_admin_scripts') );
 		}
 	}
 
+	function analytics_yandex() {
+		if (!empty($this->options['analytics_yandex_id']) )
+			echo '<!-- Yandex.Metrika counter --> <script type="text/javascript"> (function (d, w, c) { (w[c] = w[c] || []).push(function() { try { w.yaCounter'.$this->options['analytics_yandex_id'].' = new Ya.Metrika({ id:'.$this->options['analytics_yandex_id'].', clickmap:true, trackLinks:true, accurateTrackBounce:true, webvisor:true }); } catch(e) { } }); var n = d.getElementsByTagName("script")[0], s = d.createElement("script"), f = function () { n.parentNode.insertBefore(s, n); }; s.type = "text/javascript"; s.async = true; s.src = "https://mc.yandex.ru/metrika/watch.js"; if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, false); } else { f(); } })(document, window, "yandex_metrika_callbacks"); </script> <noscript><div><img src="https://mc.yandex.ru/watch/'.$this->options['analytics_yandex_id'].'" style="position:absolute; left:-9999px;" alt="" /></div></noscript> <!-- /Yandex.Metrika counter -->';
+	}
+
 	function def_opt(){
 		return array(
-			// 'postmeta_is' => 0, // Выключено для совместимости с теми сайтами где уже установлен плагин
 			'postview_is' => 'on',
-			'postview_who_count' => 'not_administrators',
+			'postview_who_count' => 'all',
 			'postview_hold_sec' => 2,
 		);
 	}
@@ -144,7 +157,7 @@ class WebMFT_SEO {
 
 	function header_title(){
 		global $post;
-		if (is_front_page()){
+		if (is_home() && is_front_page()){
 			$mv_titl = $this->options['postmeta_front_title'];
 		} else {
 			$mv_titl = get_post_meta($post->ID, '_webmft_title', true);
@@ -207,7 +220,7 @@ class WebMFT_SEO {
      *
      */
     public function enqueue_site_styles() {
-        wp_enqueue_style($this->plugin_name, plugin_dir_url(__FILE__) . 'inc/css/webmft-site-seo.css', array(), $this->version, 'all');
+        // wp_enqueue_style($this->plugin_name, plugin_dir_url(__FILE__) . 'inc/css/webmft-site-seo.css', array(), $this->version, 'all');
     }
 	public function enqueue_site_scripts() {
         wp_enqueue_script($this->plugin_name, MFT_URL . 'inc/js/webmft-site-seo.js', array('jquery'), $this->version, false);

@@ -65,10 +65,10 @@ class WEBMFT_PostNext_Widget extends WP_Widget {
 		foreach ($res as $val){
 			$title = stripslashes($val->post_title);
 			//get_permalink($val->ID) меняем на $val->guid если настроено поле guid
-			$out .= '<li><a class="item" href="'.get_permalink($val->ID).'" title="'.$title.'">'.$title.'</a></li>';
+			$out .= '<div><a class="item" href="'.get_permalink($val->ID).'" title="'.$title.'">'.$title.'</a></div>';
 		}
 
-		$out = '<ul class="post-next">'. $out .'</ul>';
+		$out = '<div class="post-next">'. $out .'</div>';
 
 		if ($cache) wp_cache_add($cache_key, $out, $cache_flag);
 
