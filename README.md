@@ -5,7 +5,7 @@
 * Tags: postviews, prev post, next post, most viewed
 * Requires at least: 4.0
 * Tested up to: 4.6
-* Stable tag: 1.6.1
+* Stable tag: 1.7.0
 * License: GPLv2 or later
 * License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -15,6 +15,7 @@ New release! Widget witout Shortcode!
 
 Counts visits of post or tax term. Plugin take 3 sidebar shortcodes for: Prev post (img from thumb), Next posts, Most viewed.
 Control Meta and Title
+Yandex Analytic
 
 ## Installation
 

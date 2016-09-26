@@ -3,7 +3,7 @@
 Plugin Name: WebMFT: Plugin SEO useful
 Plugin URI: https://github.com/MaximusFT/webmft-wp-plugin-seo
 Description: Useful for SEO
-Version: 1.6.1
+Version: 1.7.0
 Author: MaximusFT
 Author URI: https://ma-x.im
 License: GPL2

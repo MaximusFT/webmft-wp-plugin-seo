@@ -2,6 +2,8 @@
 
 class WebMFT_SEO_Admin extends WebMFT_SEO {
 
+    // (<img).*src="(.*)"\s(.*>)
+
 	function __construct(){
 		parent::__construct();
         $this->options = ($opt = get_option($this->option_name))? $opt : $this->def_opt();
