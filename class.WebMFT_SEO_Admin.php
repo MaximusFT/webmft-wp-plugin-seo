@@ -8,11 +8,21 @@ class WebMFT_SEO_Admin extends WebMFT_SEO {
 		parent::__construct();
         $this->options = ($opt = get_option($this->option_name))? $opt : $this->def_opt();
 
-		add_action('admin_menu', array( &$this, 'add_options_page'));
-		add_action('admin_init', array( &$this, 'register_webmft_settings' ) );
+		add_action('admin_menu', array(&$this, 'add_options_page'));
+		add_action('admin_init', array(&$this, 'register_webmft_settings') );
+        add_action ('save_post', array(&$this, 'guid_write'), 100);
 
-		add_filter('plugin_action_links_'. MFT_BASE, array( &$this, 'settings_link' ));
-	}
+        add_filter('plugin_action_links_'. MFT_BASE, array( &$this, 'settings_link' ));
+    }
+
+    function guid_write( $id ){
+        if ( defined('DOING_AUTOSAVE') && DOING_AUTOSAVE  ) return false; // если это автосохранение
+
+        global $wpdb;
+
+        if( $id = (int) $id )
+            $wpdb->query("UPDATE $wpdb->posts SET guid='". get_permalink($id) ."' WHERE ID=$id LIMIT 1");
+    }
 
 	// Settings page link in plugins table ---
 	function settings_link($links){
@@ -38,6 +48,7 @@ class WebMFT_SEO_Admin extends WebMFT_SEO {
                 <h2 class="nav-tab-wrapper webmft-tab-wrapper js-tab-wrapper">
                     <a class="nav-tab nav-tab-active" id="postview-tab" href="#top#postview">Post viewes</a>
                     <a class="nav-tab" id="postmeta-tab" href="#top#postmeta">Post Meta & Title</a>
+                    <a class="nav-tab" id="noindex-tab" href="#top#noindex">Noindex Settings</a>
                     <a class="nav-tab" id="analytics-tab" href="#top#analytics">Analytic`s</a>
                 </h2>
 
@@ -60,23 +71,42 @@ class WebMFT_SEO_Admin extends WebMFT_SEO {
 							'not_administrators'=>__('All, except administrators','webmft'));
                         $this->display_select('postview_who_count', $tmpA);
                         ?>
-                	</div>
+                    </div>
                     <div class="form-group">
-	                    <label for="postview_hold_sec">Delay in seconds</label>
+                        <label for="postview_hold_sec">Delay in seconds</label>
                         <?php $this->display_input_number('postview_hold_sec', 1, 1, 10) ?>
-	                    <p class="form-text">How many seconds to delay and then count visit?</p>
-                	</div>
-				</div>
+                        <p class="form-text">How many seconds to delay and then count visit?</p>
+                    </div>
+                </div>
                 <div id="postmeta" class="wp-webmft-tab js-tab-item">
                     <h3>Post Meta & Title</h3>
+                    <div class="form-group">
+                        <label for="postmeta_is">
+                            <?php $this->display_checkbox('postmeta_is') ?>
+                                Gloabal Postmeta is active?
+                        </label>
+                    </div>
                     <div class="row">
                         <div class="col-md-5">
-                            <div class="checkbox">
-                                <label for="postmeta_is">
-                                    <?php $this->display_checkbox('postmeta_is') ?>
-                                        Gloabal Postmeta is active?
-                                </label>
-                            </div>
+                        <h4>Categories Meta</h4>
+                        <?
+                        $myterms = get_terms('category', 'orderby=count&hide_empty=0');
+                        // print_r($myterms);
+                        foreach ($myterms as $key => $value) {
+                            if ($value->term_id == 1) continue;
+                            $catTitle = 'category_'.$value->slug.'_title';
+                            $catDescr = 'category_'.$value->slug.'_description';
+                            echo '<h4>'.$value->name.'</h4>';
+                            echo '<div class="form-group"><label for="'.$catTitle.'">Title for '.$value->name.'</label>';
+                            $this->display_input_text($catTitle);
+                            echo '</div>';
+
+                            echo '<div class="form-group"><label for="'.$catDescr.'">Description for '.$value->name.'</label>';
+                            $this->display_input_text($catDescr);
+                            echo '</div>';
+                            echo '<hr>';
+                        }
+                        ?>
                         </div>
                         <div class="col-md-5">
                             <h4>Meta & Title for Front page</h4>
@@ -92,6 +122,69 @@ class WebMFT_SEO_Admin extends WebMFT_SEO {
                                 <label for="postmeta_front_keywords">Keywords</label>
                                 <?php $this->display_input_text('postmeta_front_keywords') ?>
                             </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="noindex" class="wp-webmft-tab js-tab-item">
+                    <h3>Noindex Settings</h3>
+                    <div class="row">
+                        <div class="col-md-5">
+                            <div class="form-group">
+                                <label for="noindex_tax">
+                                    <?php $this->display_checkbox('noindex_tax') ?>
+                                    Use noindex for Tax?
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label for="noindex_category">
+                                    <?php $this->display_checkbox('noindex_category') ?>
+                                    Use noindex for Categories?
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label for="noindex_archive_date">
+                                    <?php $this->display_checkbox('noindex_archive_date') ?>
+                                    Use noindex for Date Archives?
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label for="noindex_archive_author">
+                                    <?php $this->display_checkbox('noindex_archive_author') ?>
+                                    Use noindex for Author Archives?
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label for="noindex_tags">
+                                    <?php $this->display_checkbox('noindex_tags') ?>
+                                    Use noindex for Tag Archives?
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label for="noindex_search">
+                                    <?php $this->display_checkbox('noindex_search') ?>
+                                    Use noindex for the Search page?
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label for="noindex_404">
+                                    <?php $this->display_checkbox('noindex_404') ?>
+                                    Use noindex for the 404 page?
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label for="noindex_paginated">
+                                    <?php $this->display_checkbox('noindex_paginated') ?>
+                                    Use noindex for paginated pages/posts?
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label for="nofollow_paginated">
+                                    <?php $this->display_checkbox('nofollow_paginated') ?>
+                                    Use nofollow for paginated pages/posts?
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-5">
                         </div>
                     </div>
                 </div>
