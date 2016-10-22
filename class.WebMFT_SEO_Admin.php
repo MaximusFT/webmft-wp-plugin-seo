@@ -54,7 +54,7 @@ class WebMFT_SEO_Admin extends WebMFT_SEO {
 
                 <div id="postview" class="wp-webmft-tab js-tab-item active">
                     <h3>Post viewes</h3>
-                    <div class="checkbox">
+                    <div class="form-group">
 	                    <label for="postview_is">
 	                        <?php $this->display_checkbox('postview_is') ?>
 	                        	Gloabal Postview is active?
@@ -190,21 +190,36 @@ class WebMFT_SEO_Admin extends WebMFT_SEO {
                 </div>
 				<div id="analytics" class="wp-webmft-tab js-tab-item">
                     <h3>Analytic`s</h3>
-                    <h3>Yandex Metrica</h3>
                     <div class="row">
                         <div class="col-md-5">
-                            <div class="checkbox">
-                                <label for="postmeta_is">
+                            <h4>Yandex Metrica</h4>
+                            <div class="form-group">
+                                <label for="analytics_yandex_is">
                                     <?php $this->display_checkbox('analytics_yandex_is') ?>
                                         Gloabal Yandex Metrica is active?
                                 </label>
                             </div>
+                            <div class="form-group">
+                                <label for="analytics_yandex_id">Yandex Metrica ID</label>
+                                <?php $this->display_input_text('analytics_yandex_id') ?>
+                            </div>
                         </div>
                         <div class="col-md-5">
-                            <h4>Yandex Metrica ID</h4>
+                            <h4>PIWIK Metrica</h4>
                             <div class="form-group">
-                                <label for="postmeta_front_title">ID</label>
-                                <?php $this->display_input_text('analytics_yandex_id') ?>
+                                <label for="analytics_piwik_is">
+                                    <?php $this->display_checkbox('analytics_piwik_is') ?>
+                                        PIWIK Metrica is active?
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label for="analytics_piwik_id">Local or Gloabal PIWIK ID</label>
+                                <?php $this->display_input_text('analytics_piwik_id') ?>
+                            </div>
+                            <div class="form-group">
+                                <label for="analytics_piwik_url_track">URL track</label>
+                                <?php $this->display_input_text('analytics_piwik_url_track') ?>
+                                <p class="form-text">Example: //site.com/piwik/</p>
                             </div>
                         </div>
                     </div>

@@ -15,27 +15,31 @@ class WebMFT_SEO {
 	function __construct(){
         global $wp_query, $posts;
 
-        $this->plugin_name      = 'webmft-seo-useful';
-
-		$this->options = ($opt = get_option($this->option_name))? $opt : $this->def_opt();
+		$this->plugin_name = 'webmft-seo-useful';
+		$this->options     = ($opt = get_option($this->option_name))? $opt : $this->def_opt();
 
 		add_action('wp_head', 'webmft_seo');
 		add_filter('widget_text', 'do_shortcode');
 		add_theme_support('title-tag');
 
-		if (!is_admin() && isset($this->options['postview_is'])){
-			add_action('wp_enqueue_scripts', create_function('','wp_enqueue_script("jquery");'));
-			add_action('wp_footer', array( &$this, 'show_js'), 99);
-		}
+		if ( !is_admin() ){
+			if (isset($this->options['postview_is'])){
+				add_action('wp_enqueue_scripts', create_function('','wp_enqueue_script("jquery");'));
+				add_action('wp_footer', array( &$this, 'show_js'), 99);
+			}
 
-		if (!is_admin() && isset($this->options['postmeta_is'])){
-			add_filter('pre_get_document_title', array (&$this, 'header_title'));
-			add_action('wp_head', array (&$this, 'header_meta'), 1);
-			add_action('wp_head', array (&$this, 'header_noindex'), 1);
-		}
+			if (isset($this->options['postmeta_is'])){
+				add_filter('pre_get_document_title', array (&$this, 'header_title'));
+				add_action('wp_head', array (&$this, 'header_meta'), 1);
+				add_action('wp_head', array (&$this, 'header_noindex'), 1);
+			}
 
-		if (!is_admin() && isset($this->options['analytics_yandex_is'])){
-			add_action( 'wp_footer', array( $this, 'analytics_yandex' ) );
+			if (isset($this->options['analytics_yandex_is'])){
+				add_action( 'wp_footer', array( $this, 'analytics_yandex' ) );
+			}
+			if (isset($this->options['analytics_piwik_is'])){
+				add_action( 'wp_footer', array( $this, 'analytics_piwik' ) );
+			}
 		}
 
 		remove_action('wp_head', 'wp_print_scripts');
@@ -64,6 +68,10 @@ class WebMFT_SEO {
 	function analytics_yandex() {
 		if (!empty($this->options['analytics_yandex_id']) )
 			echo '<!-- Yandex.Metrika counter --> <script type="text/javascript"> (function (d, w, c) { (w[c] = w[c] || []).push(function() { try { w.yaCounter'.$this->options['analytics_yandex_id'].' = new Ya.Metrika({ id:'.$this->options['analytics_yandex_id'].', clickmap:true, trackLinks:true, accurateTrackBounce:true, webvisor:true }); } catch(e) { } }); var n = d.getElementsByTagName("script")[0], s = d.createElement("script"), f = function () { n.parentNode.insertBefore(s, n); }; s.type = "text/javascript"; s.async = true; s.src = "https://mc.yandex.ru/metrika/watch.js"; if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, false); } else { f(); } })(document, window, "yandex_metrika_callbacks"); </script> <noscript><div><img src="https://mc.yandex.ru/watch/'.$this->options['analytics_yandex_id'].'" style="position:absolute; left:-9999px;" alt="" /></div></noscript> <!-- /Yandex.Metrika counter -->';
+	}
+	function analytics_piwik() {
+		if (!empty($this->options['analytics_piwik_id']) )
+			echo '<!-- Piwik --> <script type="text/javascript">var _paq = _paq || [];_paq.push(["trackPageView"]);_paq.push(["enableLinkTracking"]);(function(){var u="'.$this->options['analytics_piwik_url_track'].'";_paq.push(["setTrackerUrl", u+"piwik.php"]);_paq.push(["setSiteId", "'.$this->options['analytics_piwik_id'].'"]);var d=document, g=d.createElement("script"), s=d.getElementsByTagName("script")[0];g.type="text/javascript"; g.async=true; g.defer=true; g.src=u+"piwik.js"; s.parentNode.insertBefore(g,s);})();</script><noscript><p><img src="'.$this->options['analytics_piwik_url_track'].'piwik.php?idsite='.$this->options['analytics_piwik_id'].'" style="border:0;" alt="" /></p></noscript><!-- End Piwik Code -->';
 	}
 
 	function def_opt(){
