@@ -30,8 +30,8 @@ Noindex settings
 * nofollow for paginated pages/posts?
 
 Right links in
-* <link rel='prev'>
-* <link rel='next'>
+* `<link rel='prev'>`
+* `<link rel='next'>`
 
 Analytics
 * Yandex Analytic
