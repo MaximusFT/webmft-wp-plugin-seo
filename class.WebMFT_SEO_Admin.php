@@ -91,9 +91,7 @@ class WebMFT_SEO_Admin extends WebMFT_SEO {
                         <h4>Categories Meta</h4>
                         <?
                         $myterms = get_terms('category', 'orderby=count&hide_empty=0');
-                        // print_r($myterms);
                         foreach ($myterms as $key => $value) {
-                            if ($value->term_id == 1) continue;
                             $catTitle = 'category_'.$value->slug.'_title';
                             $catDescr = 'category_'.$value->slug.'_description';
                             echo '<h4>'.$value->name.'</h4>';
