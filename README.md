@@ -5,7 +5,7 @@
 * Tags: postviews, prev post, next post, most viewed
 * Requires at least: 4.0
 * Tested up to: 4.6
-* Stable tag: 1.7.7
+* Stable tag: 1.7.8
 * License: GPLv2 or later
 * License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -49,6 +49,9 @@ This section describes how to install the plugin and get it working.
 
 
 ## Changelog
+
+= 1.7.8 =
+* Fix category META
 
 = 1.7.6 =
 * Add Analytic PIWIK
