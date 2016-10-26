@@ -326,6 +326,39 @@ class WebMFT_SEO {
 		return $page;
 	}
 	/**
+	 * @return null|object|WP_Post
+	 */
+	function get_queried_object() {
+		static $p = null;
+		global $wp_query, $post;
+		if ( null !== $p ) {
+			return $p;
+		}
+		if ( is_object( $post ) ) {
+			$p = $post;
+		} else {
+			if ( ! $wp_query ) {
+				return null;
+			}
+			$p = $wp_query->get_queried_object();
+		}
+
+		return $p;
+	}
+	/**
+	 * @return bool|null
+	 */
+	function is_static_posts_page() {
+		static $is_posts_page = null;
+		if ( $is_posts_page !== null ) {
+			return $is_posts_page;
+		}
+		$post          = $this->get_queried_object();
+		$is_posts_page = ( get_option( 'show_on_front' ) == 'page' && is_home() && ! empty( $post ) && $post->ID == get_option( 'page_for_posts' ) );
+
+		return $is_posts_page;
+	}
+	/**
 	 * @param $link
 	 *
 	 * @return string
