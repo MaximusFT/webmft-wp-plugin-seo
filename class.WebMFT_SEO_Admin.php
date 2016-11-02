@@ -50,6 +50,7 @@ class WebMFT_SEO_Admin extends WebMFT_SEO {
                     <a class="nav-tab" id="postmeta-tab" href="#top#postmeta">Post Meta & Title</a>
                     <a class="nav-tab" id="noindex-tab" href="#top#noindex">Noindex Settings</a>
                     <a class="nav-tab" id="analytics-tab" href="#top#analytics">Analytic`s</a>
+                    <a class="nav-tab" id="hidelinks-tab" href="#top#hidelinks">GoTo</a>
                 </h2>
 
                 <div id="postview" class="wp-webmft-tab js-tab-item active">
@@ -186,7 +187,7 @@ class WebMFT_SEO_Admin extends WebMFT_SEO {
                         </div>
                     </div>
                 </div>
-				<div id="analytics" class="wp-webmft-tab js-tab-item">
+                <div id="analytics" class="wp-webmft-tab js-tab-item">
                     <h3>Analytic`s</h3>
                     <div class="row">
                         <div class="col-md-5">
@@ -218,6 +219,54 @@ class WebMFT_SEO_Admin extends WebMFT_SEO {
                                 <label for="analytics_piwik_url_track">URL track</label>
                                 <?php $this->display_input_text('analytics_piwik_url_track') ?>
                                 <p class="form-text">Example: //site.com/piwik/</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+				<div id="hidelinks" class="wp-webmft-tab js-tab-item">
+                    <div class="row">
+                        <div class="col-md-5">
+                            <h4>Setup Links</h4>
+                            <div class="form-group">
+                                <label for="goto_provider_def">Link Default</label>
+                                <?php $this->display_input_text('goto_provider_def') ?>
+                            </div>
+                            <div class="form-group">
+                                <label for="goto_provider_1">Link #1</label>
+                                <?php $this->display_input_text('goto_provider_1') ?>
+                            </div>
+                            <div class="form-group">
+                                <label for="goto_provider_2">Link #2</label>
+                                <?php $this->display_input_text('goto_provider_2') ?>
+                            </div>
+                            <div class="form-group">
+                                <label for="goto_provider_3">Link #3</label>
+                                <?php $this->display_input_text('goto_provider_3') ?>
+                            </div>
+                            <div class="form-group">
+                                <label for="goto_provider_4">Link #4</label>
+                                <?php $this->display_input_text('goto_provider_4') ?>
+                            </div>
+                            <div class="form-group">
+                                <label for="goto_provider_5">Link #5</label>
+                                <?php $this->display_input_text('goto_provider_5') ?>
+                            </div>
+                            <div class="form-group">
+                                <label for="goto_provider_6">Link #6</label>
+                                <?php $this->display_input_text('goto_provider_6') ?>
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <h4>Setup GoTo</h4>
+                            <div class="form-group">
+                                <label for="goto_setup_link">Router Link</label>
+                                <?php $this->display_input_text('goto_setup_link') ?>
+                                <p class="form-text">Default var 'goto' => Example: '/goto/1/'</p>
+                                <?php
+                                if ('' == $this->options['goto_setup_link']) $goto_setup_link = 'goto';
+                                else $goto_setup_link = $this->options['goto_setup_link'];
+                                ?>
+                                <p class="form-text">Now your GoTo Links is: '/<?php echo $goto_setup_link;?>/1/'</p>
                             </div>
                         </div>
                     </div>

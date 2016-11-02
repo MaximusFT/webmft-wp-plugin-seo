@@ -51,8 +51,14 @@ class WebMFT_SEO {
 
 		add_action('widgets_init', array (&$this, 'register_webmft_widgets'));
 
-		add_shortcode('webmft_post_most_viewed', array (&$this, 'post_most_viewed'));
-		add_shortcode('webmft_post_prev', array (&$this, 'post_prev'));
+		/**
+		 * Activate GoTo
+		 */
+		register_activation_hook(__FILE__, array( $this, 'webmft_goto_activate'));
+		register_deactivation_hook(__FILE__, array( $this, 'webmft_goto_deactivate'));
+		add_action('init', array( $this, 'webmft_goto_rules'));
+		add_filter('query_vars', array( $this, 'webmft_goto_query_vars'));
+		add_filter('template_redirect', array( $this, 'webmft_goto_display'));
 
         /**
          * Add css and js files
@@ -452,6 +458,47 @@ class WebMFT_SEO {
 		}
 
 		return array( 'prev' => $prev, 'next' => $next );
+	}
+
+	/**
+	 * webmft_GoTo
+	 */
+	function webmft_goto_activate() {
+	    webmft_goto_rules();
+	    flush_rewrite_rules();
+	}
+
+	function webmft_goto_deactivate() {
+	    flush_rewrite_rules();
+	}
+
+	function webmft_goto_rules() {
+		if ('' == $this->options['goto_setup_link']) $goto_setup_link = 'goto';
+		else $goto_setup_link = $this->options['goto_setup_link'];
+	    add_rewrite_rule(''.$goto_setup_link.'/?([^/]*)', 'index.php?pagename='.$goto_setup_link.'&provider=$matches[1]', 'top');
+	}
+
+	function webmft_goto_query_vars($vars) {
+	    $vars[] = 'provider';
+	    return $vars;
+	}
+
+	function webmft_goto_display() {
+		if ('' == $this->options['goto_setup_link']) $goto_setup_link = 'goto';
+		else $goto_setup_link = $this->options['goto_setup_link'];
+
+	    $url = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+	    $urlTemp = parse_url($url, PHP_URL_PATH);
+	    $urlArr = explode('/', $urlTemp);
+	    $cust_page = $urlArr[1];
+	    $provider = $urlArr[2];
+	    if ($goto_setup_link == $cust_page && '' == $provider):
+	    	echo '<script>window.location.replace("'.$this->options['goto_provider_def'].'");</script>';
+	        exit;
+	    elseif ($goto_setup_link == $cust_page && '' != $provider):
+	    	echo '<script>window.location.replace("'.$this->options['goto_provider_'.$provider].'");</script>';
+	        exit;
+	    endif;
 	}
 
 }

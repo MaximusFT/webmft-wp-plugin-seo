@@ -5,20 +5,20 @@
 * Tags: postviews, prev post, next post, most viewed
 * Requires at least: 4.0
 * Tested up to: 4.6
-* Stable tag: 1.7.9
+* Stable tag: 1.8.0
 * License: GPLv2 or later
 * License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 ## Description
 
-New release 1.7! Widget witout Shortcode!
+New release 1.8! Add GoTo (hide external Links)!
 
 Counts visits of post or tax term.
 Plugin take 3 Widget: Prev post (img from thumb), Next posts, Most viewed.
 Control Title, Meta (Description and Keywords) for Post, Page and Category
-CSS go UP, Scripts go Down
+CSS go UP, Scripts go Down, GoTo (hide external Links)
 
-Noindex settings
+### Noindex settings
 * noindex for Tax?
 * noindex for Categories?
 * noindex for Date Archives?
@@ -29,14 +29,16 @@ Noindex settings
 * noindex for paginated pages/posts?
 * nofollow for paginated pages/posts?
 
-Right links in
+### Right links in
 * `<link rel='prev'>`
 * `<link rel='next'>`
 
-Analytics
+### Analytics
 * Yandex Analytic
 * PIWIK Analytic
 
+### GoTo
+hide your external links in posts. You setup external links in Admin, and then in article use links like 'http://yourcurrsite.com/goto/1/' that send your Users on 'http://myhidesite.com/?r=maybeWithMyRefLinks' )))
 
 ## Installation
 
@@ -49,6 +51,9 @@ This section describes how to install the plugin and get it working.
 
 
 ## Changelog
+
+= 1.8.0 =
+* Add new features GoTo links, what make hide your external links in posts.
 
 = 1.7.9 =
 * Fix category check on static posts page
