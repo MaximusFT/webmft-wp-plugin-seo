@@ -2,8 +2,6 @@
 
 class WebMFT_SEO_Admin extends WebMFT_SEO {
 
-    // (<img).*src="(.*)"\s(.*>)
-
 	function __construct(){
 		parent::__construct();
         $this->options = ($opt = get_option($this->option_name))? $opt : $this->def_opt();
@@ -24,7 +22,6 @@ class WebMFT_SEO_Admin extends WebMFT_SEO {
             $wpdb->query("UPDATE $wpdb->posts SET guid='". get_permalink($id) ."' WHERE ID=$id LIMIT 1");
     }
 
-	// Settings page link in plugins table ---
 	function settings_link($links){
 		array_unshift( $links, '<a href="'.admin_url('admin.php?page=webmft_seo').'">'.__('Settings', 'webmft') .'</a>' );
 		return $links;
@@ -48,11 +45,14 @@ class WebMFT_SEO_Admin extends WebMFT_SEO {
                 <h2 class="nav-tab-wrapper webmft-tab-wrapper js-tab-wrapper">
                     <a class="nav-tab nav-tab-active" id="postview-tab" href="#top#postview">Post viewes</a>
                     <a class="nav-tab" id="postmeta-tab" href="#top#postmeta">Post Meta & Title</a>
-                    <a class="nav-tab" id="noindex-tab" href="#top#noindex">Noindex Settings</a>
+                    <a class="nav-tab" id="noindex-tab" href="#top#noindex">Noindex</a>
                     <a class="nav-tab" id="analytics-tab" href="#top#analytics">Analytic`s</a>
                     <a class="nav-tab" id="hidelinks-tab" href="#top#hidelinks">GoTo</a>
+                    <a class="nav-tab" id="extlinks-tab" href="#top#extlinks">Ext Links</a>
                 </h2>
-
+                <?php
+                submit_button();
+                ?>
                 <div id="postview" class="wp-webmft-tab js-tab-item active">
                     <h3>Post viewes</h3>
                     <div class="form-group">
@@ -223,7 +223,7 @@ class WebMFT_SEO_Admin extends WebMFT_SEO {
                         </div>
                     </div>
                 </div>
-				<div id="hidelinks" class="wp-webmft-tab js-tab-item">
+                <div id="hidelinks" class="wp-webmft-tab js-tab-item">
                     <div class="row">
                         <div class="col-md-5">
                             <h4>Setup Links</h4>
@@ -270,6 +270,27 @@ class WebMFT_SEO_Admin extends WebMFT_SEO {
                             </div>
                         </div>
                     </div>
+                </div>
+				<div id="extlinks" class="wp-webmft-tab js-tab-item">
+                    <div class="row">
+                        <div class="col-md-5">
+                            <h4>Setup Links</h4>
+                            <div class="form-group">
+                                <label for="extlinks_is">
+                                    <?php $this->display_checkbox('extlinks_is') ?>
+                                        External Links is active?
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <h4>Setup CSS</h4>
+                            <p class="form-text">You need customize .btn and .btn-success</p>
+                            <div class="form-group">
+                                <label for="extlinks_custom_css">Custom CSS</label>
+                                <?php $this->display_textarea('extlinks_custom_css') ?>
+                            </div>
+                        </div>
+                    </div>
 				</div>
 				<?php
 				submit_button();
@@ -287,7 +308,7 @@ class WebMFT_SEO_Admin extends WebMFT_SEO {
     public function display_checkbox( $name ) {
         $checked = '';
         if (isset($this->options[$name]) && $this->options[$name] == 'on') $checked = ' checked';
-        $string = '<input name="' . $this->option_name . '[' . $name . ']" type="checkbox" id="' . $name . '" value="on"'. $checked .'>';
+        $string = '<input name="'.$this->option_name.'['.$name.']" type="checkbox" id="'.$name.'" value="on"'. $checked .'>';
         echo $string;
     }
 
@@ -299,7 +320,19 @@ class WebMFT_SEO_Admin extends WebMFT_SEO {
     public function display_input_text( $name ) {
         $value = '';
         if (isset($this->options[$name]) && ! empty($this->options[$name])) $value = $this->options[$name];
-        $string = '<input name="' . $this->option_name . '[' . $name . ']" type="text" id="' . $name . '" value="'. $value .'"" class="form-control">';
+        $string = '<input name="'.$this->option_name.'['.$name.']" type="text" id="'.$name.'" value="'. $value .'"" class="form-control">';
+        echo $string;
+    }
+
+    /**
+     * Display textarea field
+     *
+     * @param string $name
+     */
+    public function display_textarea( $name ) {
+        $value = '';
+        if (isset($this->options[$name]) && ! empty($this->options[$name])) $value = $this->options[$name];
+        $string = '<textarea name="'.$this->option_name.'['.$name .']" id="'.$name.'" class="form-control" rows="7" autocomplete="off">'.$value.'</textarea>';
         echo $string;
     }
 
@@ -314,11 +347,11 @@ class WebMFT_SEO_Admin extends WebMFT_SEO {
     public function display_input_number( $name , $step = '', $min = '', $max = '' ) {
         $value = '';
         if (isset($this->options[$name]) && ! empty($this->options[$name])) $value = $this->options[$name];
-        $string  = '<input name="' . $this->option_name . '[' . $name . ']" type="number" ';
+        $string  = '<input name="'.$this->option_name.'['.$name.']" type="number" ';
         if (!empty($step)) $string .= 'step="'. $step .'" ';
         if (!empty($min) || $min === 0)  $string .= 'min="'. $min .'"  ';
         if (!empty($max))  $string .= 'max="'. $max .'" ';
-        $string .= 'id="' . $name . '" value="'. $value .'"" class="form-control">';
+        $string .= 'id="'.$name.'" value="'. $value .'"" class="form-control">';
         echo $string;
     }
 
@@ -330,14 +363,14 @@ class WebMFT_SEO_Admin extends WebMFT_SEO {
      */
     public function display_select( $name , $values ) {
         if (isset($this->options[$name]) && ! empty($this->options[$name])) $value = $this->options[$name];
-        $string  = '<select class="form-control" name="' . $this->option_name . '[' . $name . ']" id="' . $name . '">';
+        $string  = '<select class="form-control" name="'.$this->option_name.'['.$name.']" id="'.$name.'">';
 
         if (is_array( $values )) {
             foreach ($values as $key => $value) {
                 $selected = '';
                 if (isset($this->options[$name]) && $this->options[$name] == $key) $selected = ' selected';
 
-                $string .= '<option value="' . $key . '"'. $selected .'>' . $value . '</option>';
+                $string .= '<option value="'.$key.'"'. $selected .'>'.$value.'</option>';
             }
         }
 
