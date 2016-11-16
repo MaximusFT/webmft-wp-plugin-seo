@@ -68,15 +68,32 @@ class WEBMFT_PostMostViewed_Widget extends WP_Widget {
 			if ((int)$val->ID == (int)$cur_postID) $classActive = "active";
 			else $classActive = '';
 			$title = $val->post_title;
-			$out .= '<div class="'.$classActive.'"><a class="item" href="'.get_permalink($val->ID).'" title="'.$val->views.' views: '.$title.'">'.$title.'</a></div>';
+			if ($args['format'] == 0) {
+				$out .= '<div class="'.$classActive.'"><a class="item" href="'.get_permalink($val->ID).'" title="'.$val->views.' views: '.$title.'">'.$title.'</a></div>';
+			} elseif ($args['format'] == 1) {
+				$atchment_post_IDD = get_the_post_thumbnail( url_to_postid( get_permalink($val->ID)), 'thumbnail' ); 
+				$Sformat = '<li class="static"><div class="ben_1"><a href="'. get_permalink($cur_postID) .'" title="{'.$val->views.'}: '.$title.'">'.$atchment_post_IDD.'</a><div class="button_k"><a href="'. get_permalink($cur_postID) .'" title="{'.$val->views.'}: '.$title.'" style="text-decoration: none; line-height: 35px;"><center>'.$title.'</center></a></div></div></li>';
+				$out .= $Sformat;
+			} else {
+				$out .= '<div class="'.$classActive.'"><a class="item" href="'.get_permalink($val->ID).'" title="'.$val->views.' views: '.$title.'">'.$title.'</a></div>';
+			}
 		}
-
-		$out = '<div class="post-most-viewed">'. $out .'</div>';
+		if ($args['format'] == 0) {
+			$echo = 1;
+			$out = '<div class="post-most-viewed">'. $out .'</div>';
+		} elseif ($args['format'] == 1) {
+			$out = '<ul style="displw">'. $out .'</ul>';
+		} else {
+			$out = '<div class="post-most-viewed">'. $out .'</div>';
+		}
 
 		if($cache) wp_cache_add($cache_key, $out);
 
-		echo $out;
-		echo $args['after_widget'];
+		if( $echo ) {
+			echo $out;
+			echo $args['after_widget'];
+		} else
+			return $out;
 	}
 
 	function form ($instance) {

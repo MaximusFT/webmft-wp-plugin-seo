@@ -42,6 +42,11 @@ class WebMFT_SEO {
 			}
 
 			/**
+			 * Add most viewed in Front page $content
+			 */
+			add_action( 'the_content', array( $this, 'most_viewed_in_fontpage' ) );
+
+			/**
 			 * Add external link to $content
 			 */
 
@@ -467,6 +472,19 @@ class WebMFT_SEO {
 		}
 
 		return array( 'prev' => $prev, 'next' => $next );
+	}
+
+	/**
+	 * most_viewed_in_fontpage
+	 */
+	function most_viewed_in_fontpage($text) {
+		if (is_front_page()){
+			// echo '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!';
+		    $tmp_text = WEBMFT_PostMostViewed_Widget::widget(['format'=>1]);
+		    // print_r($tmp_text);
+		    $text = $text.$tmp_text;
+		}
+	    return $text;
 	}
 
 	/**
