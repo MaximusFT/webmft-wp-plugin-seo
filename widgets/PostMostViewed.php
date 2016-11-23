@@ -29,6 +29,7 @@ class WEBMFT_PostMostViewed_Widget extends WP_Widget {
 			echo $args['before_title'] . $title . $args['after_title'];
 		}
 
+		$cat    = isset($instance['cat']) ? $instance['cat']:'';
 		$num    = isset($instance['num']) ? $instance['num']:5;
 		$key    = isset($instance['key']) ? $instance['key']:'views';
 		$order  = isset($instance['order']) ? 'ASC':'DESC';
@@ -52,37 +53,81 @@ class WEBMFT_PostMostViewed_Widget extends WP_Widget {
 				$AND_days = "AND YEAR(post_date)=" . $days;
 		}
 
+
+		foreach( $GLOBALS['wp_query']->posts as $post ) $IDs .= $post->ID .',';
+		$AND_NOT_IN = ' AND p.ID NOT IN ('. rtrim($IDs, ',') .')';
+
+		if( $cat ){
+			$JOIN = "
+				LEFT JOIN $wpdb->postmeta pm ON (pm.post_id = p.ID)
+				LEFT JOIN $wpdb->term_relationships rel ON ( p.ID = rel.object_id )
+				LEFT JOIN $wpdb->term_taxonomy tax ON ( tax.term_taxonomy_id = rel.term_taxonomy_id  )
+				";
+			$DISTINCT = "DISTINCT";
+			$AND_taxonomy = "AND tax.taxonomy = 'category'";
+			$AND_category = "AND tax.term_id IN ($cat)";
+			//Проверка на исключение категорий
+			if( strpos($cat, '-')!==false )
+				$AND_category = 'AND tax.term_id NOT IN ('. str_replace( '-','', $cat ) .')';
+
+		}
+		$sql = "SELECT $DISTINCT p.ID, p.post_title, p.post_date, p.comment_count, p.guid, (pm.meta_value+0) AS views
+		FROM $wpdb->posts p $JOIN
+		WHERE pm.meta_key = '$key' $AND_days AND p.post_type = 'post' AND p.post_status = 'publish' $AND_category $AND_taxonomy $AND_NOT_IN
+		ORDER BY views DESC LIMIT $num";
+		$res = $wpdb->get_results($sql);
+		/*
 		$sql = "SELECT p.ID, p.post_title, p.post_date, p.guid, p.comment_count, (pm.meta_value+0) AS views
 		FROM $wpdb->posts p
 			LEFT JOIN $wpdb->postmeta pm ON (pm.post_id = p.ID)
 		WHERE pm.meta_key = '$key' $AND_days AND p.post_type = 'post' AND p.post_status = 'publish'
 		ORDER BY views $order LIMIT $num";
 		$res = $wpdb->get_results($sql);
-
+*/
 		if(!$res) {
 			echo $args['after_widget'];
 			return false;
 		}
-
+		$i = 0;
 		foreach($res as $val){
+			$i++;
 			if ((int)$val->ID == (int)$cur_postID) $classActive = "active";
 			else $classActive = '';
 			$title = $val->post_title;
 			if ($args['format'] == 0) {
 				$out .= '<div class="'.$classActive.'"><a class="item" href="'.get_permalink($val->ID).'" title="'.$val->views.' views: '.$title.'">'.$title.'</a></div>';
 			} elseif ($args['format'] == 1) {
-				$atchment_post_IDD = get_the_post_thumbnail( url_to_postid( get_permalink($val->ID)), 'thumbnail' ); 
-				$Sformat = '<li class="static"><div class="ben_1"><a href="'. get_permalink($cur_postID) .'" title="{'.$val->views.'}: '.$title.'">'.$atchment_post_IDD.'</a><div class="button_k"><a href="'. get_permalink($cur_postID) .'" title="{'.$val->views.'}: '.$title.'" style="text-decoration: none; line-height: 35px;"><center>'.$title.'</center></a></div></div></li>';
-				$out .= $Sformat;
+
+					$atchment_post_IDD = get_the_post_thumbnail( url_to_postid( get_permalink($val->ID)), 'thumbnail' );
+					
+							$Sformat = '<div class="mrg-slots-cards"><a href="'. get_permalink($val->ID) .'"><div class="mrg-slot-card-img lazy"><p class="pabz">'.$atchment_post_IDD.'</p><div class="mrg-slot-info"><h1 class="myh1">'.$title.'</h1></div></div></a><div class="mrg-slot-play-btn"><a href="'. get_permalink($val->ID) .'">Review</a></div></div>';
+							$out .= $Sformat;
+						
+
+
+					 
+					
+					
+	
+			} elseif ($args['format'] == 2) {
+
+						$atchment_post_IDD = get_the_post_thumbnail( url_to_postid( get_permalink($val->ID)), 'thumbnail' ); 
+						$x = 'ben_'.$i;
+						// $x .= " current-item";
+						// $x = $x." current-item";
+						$Sformat = '<a href="'. get_permalink($val->ID) .'" target="_blank">'.$atchment_post_IDD.'</a><div class="button_k"><a href="/goto/1/" target="_blank" style="text-decoration: none; line-height: 35px;"><center>'.$title.'</center> </a></div>';
+						$out .= "<div class='$x'>$Sformat</div>";
+						//$out .= $Sformat;
 			} else {
 				$out .= '<div class="'.$classActive.'"><a class="item" href="'.get_permalink($val->ID).'" title="'.$val->views.' views: '.$title.'">'.$title.'</a></div>';
 			}
 		}
+
 		if ($args['format'] == 0) {
 			$echo = 1;
 			$out = '<div class="post-most-viewed">'. $out .'</div>';
-		} elseif ($args['format'] == 1) {
-			$out = '<ul style="displw">'. $out .'</ul>';
+		} elseif ($args['format'] == 2) {
+			$out = '<div class="static">'. $out .'</div>';
 		} else {
 			$out = '<div class="post-most-viewed">'. $out .'</div>';
 		}
@@ -105,7 +150,6 @@ class WEBMFT_PostMostViewed_Widget extends WP_Widget {
 		</p>
 		<?php
 	}
-
 	function update ($new_instance, $old_instance) {
 		$instance = array();
 		$instance['title'] = (!empty($new_instance['title']))? strip_tags($new_instance['title']) : '';

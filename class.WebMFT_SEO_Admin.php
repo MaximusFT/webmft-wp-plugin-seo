@@ -49,6 +49,7 @@ class WebMFT_SEO_Admin extends WebMFT_SEO {
                     <a class="nav-tab" id="analytics-tab" href="#top#analytics">Analytic`s</a>
                     <a class="nav-tab" id="hidelinks-tab" href="#top#hidelinks">GoTo</a>
                     <a class="nav-tab" id="extlinks-tab" href="#top#extlinks">Ext Links</a>
+                    <a class="nav-tab" id="extposts-tab" href="#top#nupopposts">Widget on Front</a>
                 </h2>
                 <?php
                 submit_button();
@@ -292,6 +293,203 @@ class WebMFT_SEO_Admin extends WebMFT_SEO {
                         </div>
                     </div>
 				</div>
+                <div id="extposts" class="wp-webmft-tab js-tab-item">
+                    <div class="row">
+                    <div class="col-md-3">
+                            <h4>Переключить язик рейтинга на русский</h4>
+                            <div class="form-group">
+                                <label for="extposts_yazik_retings">
+                                    <?php $this->display_checkbox('extposts_yazik_retings') ?>
+                                    по умолчанию английский
+                                    <p>(Рейтинг: N из 5) N = просмотров</p>
+                                    <p>(Rating: N out of 5) N = viewss</p>
+                                </label>
+                            </div>
+                        </div>
+                    <div class="col-md-3">
+                            <h4>Переключить язик мета-тегах на русский</h4>
+                            <div class="form-group">
+                                <label for="extposts_yazik_meta_retings">
+                                    <?php $this->display_checkbox('extposts_yazik_meta_retings') ?>
+                                    по умолчанию английский
+                                </label>
+                                <p>- page N / - страница N</p>
+                            </div>
+                        </div>
+
+                     <div class="col-md-3">
+                            <h4>Включение рейтинга постов</h4>
+                            <div class="form-group">
+                                <label for="extposts_vuvod_reting">
+                                    <?php $this->display_checkbox('extposts_vuvod_reting') ?>
+                                    Включить/Выключить вывод рейтинга
+                                </label>
+                            </div>
+                        </div>
+                     <div class="col-md-10">
+                            <h4>Управление выводом блоков</h4>
+                            <div class="form-group">
+                                <label for="extposts_before_text">
+                                    <?php $this->display_checkbox('extposts_before_text') ?> 
+                                    Если функция не активна то вывод будет производиться после текста
+                                </label>
+                            </div>
+                        </div>
+
+
+
+
+
+                         <div class="col-md-3">
+                            <h4>C наибольшим количеством просмотров</h4>
+                            <p>В основном для категории обзоров казино</p>
+                            <div class="form-group">
+                                <label for="extposts_casino_reviews">
+                                    <?php $this->display_checkbox('extposts_casino_reviews') ?>
+                                        Блок "Casino Reviews"
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label for="extposts_nazanie_h2_before_casino_reviews">Заголовок перед блоком</label>
+                                <?php $this->display_input_text('extposts_nazanie_h2_before_casino_reviews') ?>
+                            </div>
+                            <div class="form-group">
+                                <label for="extposts_nazanie_h2_after_casino_reviews">Заголовок после блока</label>
+                                <?php $this->display_input_text('extposts_nazanie_h2_after_casino_reviews') ?>
+                            </div>
+                            <div class="form-group">
+                                <label for="extposts_kolichestvo_postov_casino_reviews">Количество выводимых постов</label>
+                                <?php $this->display_input_text('extposts_kolichestvo_postov_casino_reviews') ?>
+                            </div>
+                            <div class="form-group">
+                                <label for="extposts_id_postov_one_one">ID категорий для которых нужно вывести посты</label>
+                                <?php $this->display_input_text('extposts_id_postov_one_one') ?>
+                                ID записывать через запятую
+                            </div>
+                        </div>
+
+
+
+
+
+
+                        <div class="col-md-3">
+                            <h4>C наибольшим количеством просмотров</h4>
+                            <div class="form-group">
+                                <label for="extposts_featured_slot_machines">
+                                    <?php $this->display_checkbox('extposts_featured_slot_machines') ?>
+                                        Блок "Featured Slot Machines"
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label for="extposts_nazanie_h2_before_featured">Заголовок перед блоком</label>
+                                <?php $this->display_input_text('extposts_nazanie_h2_before_featured') ?>
+                            </div>
+                            <div class="form-group">
+                                <label for="extposts_nazanie_h2_after_featured">Заголовок после блока</label>
+                                <?php $this->display_input_text('extposts_nazanie_h2_after_featured') ?>
+                            </div>
+                            <div class="form-group">
+                                <label for="extposts_kolichestvo_postov">Количество выводимых постов</label>
+                                <?php $this->display_input_text('extposts_kolichestvo_postov') ?>
+                            </div>
+                            <div class="form-group">
+                                <label for="extposts_id_postov_one">ID категорий для которых нужно вывести посты</label>
+                                <?php $this->display_input_text('extposts_id_postov_one') ?>
+                                ID записывать через запятую
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <h4>Cамые новые</h4>
+                            <div class="form-group">
+                                <label for="extposts_all_slots">
+                                    <?php $this->display_checkbox('extposts_all_slots') ?>
+                                        Блок "All Slots Reviews"
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label for="extposts_nazanie_h2_all_slots">Заголовок перед блоком</label>
+                                <?php $this->display_input_text('extposts_nazanie_h2_all_slots') ?>
+                            </div>
+                            <div class="form-group">
+                                <label for="extposts_nazanie_h2_all_slots_after">Заголовок после блока</label>
+                                <?php $this->display_input_text('extposts_nazanie_h2_all_slots_after') ?>
+                            </div>
+                            <div class="form-group">
+                                <label for="extposts_kolichestvo_postov_two_blok">Количество выводимых постов</label>
+                                <?php $this->display_input_text('extposts_kolichestvo_postov_two_blok') ?>
+                            </div>
+                            <div class="form-group">
+                                <label for="extposts_id_categories_2_blok">ID категорий для которых нужно вывести посты</label>
+                                <?php $this->display_input_text('extposts_id_categories_2_blok') ?>
+                                ID записывать через запятую
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <h4>Cамые новые</h4>
+                            <div class="form-group">
+                                <label for="extposts_gamblink_news">
+                                    <?php $this->display_checkbox('extposts_gamblink_news') ?>
+                                        Блок "Gambling news"
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label for="extposts_nazanie_h2_gamblink_news">Заголовок перед блоком</label>
+                                <?php $this->display_input_text('extposts_nazanie_h2_gamblink_news') ?>
+                            </div>
+                            <div class="form-group">
+                                <label for="extposts_nazanie_h2_gamblink_news_after">Заголовок после блока</label>
+                                <?php $this->display_input_text('extposts_nazanie_h2_gamblink_news_after') ?>
+                            </div>
+                            <div class="form-group">
+                                <label for="extposts_kolichestvo_postov_news_blok">Количество выводимых постов</label>
+                                <?php $this->display_input_text('extposts_kolichestvo_postov_news_blok') ?>
+                            </div>
+                            <div class="form-group">
+                                <label for="extposts_id_categories_3_blok">ID категорий для которых нужно вывести посты</label>
+                                <?php $this->display_input_text('extposts_id_categories_3_blok') ?>
+                                ID записывать через запятую
+                            </div>
+                        </div>
+                             <div class="col-md-5">
+                                <h4>Categories Name</h4>
+                                <?
+                                $myterms = get_terms('category', 'orderby=count&hide_empty=0');
+                                foreach ($myterms as $key => $value) {
+                                    $catNameBefore = 'category_'.$value->slug.'_name_before';
+                                    $catNameAfter = 'category_'.$value->slug.'_name_after';
+                                    $catVklname = 'category_'.$value->slug.'_catVklname';
+                                    $catVklPaginasia = 'category_'.$value->slug.'_catVklPaginasia';
+                                    $catVklPaginasiaMeta = 'category_'.$value->slug.'_catVklPaginasiaMeta';
+                                    echo '<h4>'.$value->name.'</h4>';
+                                    echo '<div class="form-group"><label for="'.$catNameBefore.'">Текст до</label>';
+                                    $this->display_input_text($catNameBefore);
+                                    echo '</div>';
+
+                                    echo '<div class="form-group"><label for="'.$catNameAfter.'">Текст после</label>';
+                                    $this->display_input_text($catNameAfter);
+                                    echo '</div>';
+
+                                    echo '<div class="form-group"><label for="'.$catVklname.'">';
+                                    $this->display_checkbox($catVklname);
+                                    echo ' Включение изменения названий</label></div>';
+
+                                    echo '<div class="form-group"><label for="'.$catVklPaginasia.'">';
+                                    $this->display_checkbox($catVklPaginasia);
+                                    echo ' Включить добавление приставки - page</label></div>';
+
+                                     echo '<div class="form-group"><label for="'.$catVklPaginasiaMeta.'">';
+                                    $this->display_checkbox($catVklPaginasiaMeta);
+                                    echo ' Включить добавление приставки - page в мета-теги</label></div>';
+                                  
+                                    echo '<hr>';
+                                }
+                                ?>
+                        </div>
+                       
+                    </div>
+                </div>
+                
 				<?php
 				submit_button();
 				?>
