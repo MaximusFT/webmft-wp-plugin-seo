@@ -228,6 +228,7 @@ class WebMFT_SEO_Admin extends WebMFT_SEO {
                     <div class="row">
                         <div class="col-md-5">
                             <h4>Setup Links</h4>
+                           
                             <div class="form-group">
                                 <label for="goto_provider_def">Link Default</label>
                                 <?php $this->display_input_text('goto_provider_def') ?>
@@ -340,9 +341,9 @@ class WebMFT_SEO_Admin extends WebMFT_SEO {
 
 
 
-                         <div class="col-md-3">
+                         <div class="col-md-2">
                             <h4>C наибольшим количеством просмотров</h4>
-                            <p>В основном для категории обзоров казино</p>
+                            
                             <div class="form-group">
                                 <label for="extposts_casino_reviews">
                                     <?php $this->display_checkbox('extposts_casino_reviews') ?>
@@ -373,7 +374,7 @@ class WebMFT_SEO_Admin extends WebMFT_SEO {
 
 
 
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <h4>C наибольшим количеством просмотров</h4>
                             <div class="form-group">
                                 <label for="extposts_featured_slot_machines">
@@ -399,7 +400,7 @@ class WebMFT_SEO_Admin extends WebMFT_SEO {
                                 ID записывать через запятую
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <h4>Cамые новые</h4>
                             <div class="form-group">
                                 <label for="extposts_all_slots">
@@ -425,7 +426,7 @@ class WebMFT_SEO_Admin extends WebMFT_SEO {
                                 ID записывать через запятую
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <h4>Cамые новые</h4>
                             <div class="form-group">
                                 <label for="extposts_gamblink_news">
@@ -486,7 +487,31 @@ class WebMFT_SEO_Admin extends WebMFT_SEO {
                                 }
                                 ?>
                         </div>
-                       
+                       <div class="col-md-5">
+                            <h4>Выбор цвета для кнопки</h4>
+                                <div class="form-group">
+                                <label for="goto_dasdasd">goto_dasdasd</label>
+                                <?php $this->display_input_text('goto_dasdasd', 'color') ?>
+                            </div>
+                            <a href="#"  style="background-color:<?php.$this->options["goto_dasdasd"]?>;
+                                                -moz-border-radius:28px;
+                                                -webkit-border-radius:28px;
+                                                border-radius:28px;
+                                                border:1px solid #18ab29;
+                                                display:inline-block;
+                                                cursor:pointer;
+                                                color:#ffffff;
+                                                font-family:Arial;
+                                                font-size:17px;
+                                                padding:16px 31px;
+                                                text-decoration:none;
+                                                text-shadow:0px 1px 0px #2f6627;"class="myButton">green</a>
+
+    
+
+
+
+                       </div>
                     </div>
                 </div>
                 
@@ -515,10 +540,10 @@ class WebMFT_SEO_Admin extends WebMFT_SEO {
      *
      * @param string $name
      */
-    public function display_input_text( $name ) {
+    public function display_input_text( $name, $type = 'text' ) {
         $value = '';
         if (isset($this->options[$name]) && ! empty($this->options[$name])) $value = $this->options[$name];
-        $string = '<input name="'.$this->option_name.'['.$name.']" type="text" id="'.$name.'" value="'. $value .'"" class="form-control">';
+        $string = '<input name="'.$this->option_name.'['.$name.']" type="'.$type.'" id="'.$name.'" value="'. $value .'"" class="form-control">';
         echo $string;
     }
 
