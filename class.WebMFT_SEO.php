@@ -40,7 +40,10 @@ class WebMFT_SEO {
 			if (isset($this->options['analytics_piwik_is'])){
 				add_action( 'wp_footer', array( $this, 'analytics_piwik' ) );
 			}
-
+			/**
+			 * Connecting jQuery to create animation of the first block
+			 */
+			add_action( 'wp_footer', array( $this, 'script_jquery' ), 99 );
 			/**
 			 * Add most viewed in Front page $content
 			 */
@@ -100,7 +103,9 @@ class WebMFT_SEO {
 		if (!empty($this->options['analytics_piwik_id']) )
 			echo '<!-- Piwik --> <script type="text/javascript">var _paq = _paq || [];_paq.push(["trackPageView"]);_paq.push(["enableLinkTracking"]);(function(){var u="'.$this->options['analytics_piwik_url_track'].'";_paq.push(["setTrackerUrl", u+"piwik.php"]);_paq.push(["setSiteId", "'.$this->options['analytics_piwik_id'].'"]);var d=document, g=d.createElement("script"), s=d.getElementsByTagName("script")[0];g.type="text/javascript"; g.async=true; g.defer=true; g.src=u+"piwik.js"; s.parentNode.insertBefore(g,s);})();</script><noscript><p><img src="'.$this->options['analytics_piwik_url_track'].'piwik.php?idsite='.$this->options['analytics_piwik_id'].'" style="border:0;" alt="" /></p></noscript><!-- End Piwik Code -->';
 	}
-
+	function script_jquery() {
+			echo '<script>jQuery(document).ready(function(){jQuery(".srchicon").click(function(){jQuery(".searchtop").toggle(),jQuery(".topsocial").toggle()}),jQuery(document).ready(function(){jQuery(".do-open-info").on("click",function(){return jQuery(this).parent().parent().parent().addClass("card--show-back"),!1}),jQuery(".do-close-info").on("click",function(){return jQuery(this).parent().parent().parent().removeClass("card--show-back"),!1})})});</script>';
+}
 	function def_opt(){
 		return array(
 			'goto_provider_def' => 'http://bit.ly/2eUjbaA',
@@ -558,28 +563,68 @@ function most_post_id($text) {
 	function most_viewed_in_fontpage($text) {
 		if (is_front_page()){
 				$id_post = $this->options['extposts_id_nyhnovo_posta'];//айди нужно поста
-				//$id_post = '2690,2686';
 				$id_id_post = explode(",", $id_post);
-				
-			
-					foreach ($id_id_post as $id_post) {
-						$post_id = get_post( $id_post, ARRAY_A);
-						$title = $post_id['post_title']; //название поста
-						$thumb = get_the_post_thumbnail( $id_post, 'thumbnail' ); //миниатюра
-						$url = get_permalink($id_post); //урл поста
-						$echosl .= '<div class="feffew"><a href="'. $url .'">'.$thumb.'</a><p>'.$title.'</p></div>';
-				    	
-						
+				foreach ($id_id_post as $id_post) {
+					$post_id = get_post( $id_post, ARRAY_A);
+					$title = $post_id['post_title']; //название поста
+					$conte = $post_id['post_content'];//берем текст поста
+					$conte = strip_tags($conte);//удаляем html теги
+					$length=30;
+					$postfix='...';
+				    if ( strlen($conte) <= $length){
+				        return $conte;
+				    }
+				    $temp = substr($conte, 0, $length);
+				    $contez =  substr($temp, 0, strrpos($temp, ' ') ) . $postfix;
+					
 
+
+
+$length_two=100;
+					$postfix='...';
+				    if ( strlen($conte) <= $length_two){
+				        return $conte;
+				    }
+				    $temps = substr($conte, 0, $length_two);
+				    $contezq =  substr($temps, 0, strrpos($temps, ' ') ) . $postfix;
+
+
+
+					$numbersl = get_post_meta ($id_post,'views',true);
+    				$numral = $numbersl / 100 * 100;
+    				$numretigl = $numral /10;
+					if ( $numretigl >= 10 ){
+						$numretigl = 10;
+					} else {
+						$numretigl;
+					}
+//echo "<pre>";
+//print_r($conte);
+//echo "</pre>";
+
+
+
+					$thumb = get_the_post_thumbnail( $id_post, array(90,90) ); //миниатюра
+					$url = get_permalink($id_post); //урл поста
+					//$echosl .= '<div class="feffew"><a href="'. $url .'">'.$thumb.'</a><p>'.$title.'</p></div>';
+					if (!empty($this->options['extposts_ids_posts_one_style']) ) {
+					$echosl .= '<li class="card-list__item"><div class="card"><div class="card__front"><span class="card__open-info do-open-info"><i class="fa fa-toggle-on" aria-hidden="true"></i></span><div class="card__media card__media--rating card__media--casino"><a href="'.$url.'">'.$thumb.'</a><div 
+
+					class="card__ratingq ratingq"><div class="starq-ratingq"><span style="width: '.$numral.'%;"></span></div><span class="starq-ratingq--after">'.$numretigl.'</span></div></div>
+
+					<div class="card__desc"><h3 class="card__desc-title card__desc-title--clip"><span class="title">'.$title.'</span></h3><p class="card__status card__status--mobile"><span class="certified">Certified</span></p><p class="card__desc-body">'.$contez.'<p class="card__status card__status--with-action"><i class="fa fa-check-square-o" aria-hidden="true"></i>Certified</p></div><div class="card__action"><a href="/goto/1/" target="_blank">Visit</a></div></div><div class="card__back"><span class="card__close-info do-close-info"><i class="fa fa-toggle-off" aria-hidden="true"></i></span><p class="card__desc-title card__desc-title--clip">'.$title.'</p><p class="card__desc-body">'.$contezq.'</p><a href="/goto/1/" target="_blank" class="btn btn--cta card__desc-btn" style="color: #fff;">Play now</a></div></div></li>';
+						}
 
 				}
 
 				if (!empty($this->options['extposts_ids_posts']) ) {
-					$echosl = '<ul>'.$echosl.'</ul>';
-							$text = $echosl.$text;
-						} else {
-							return $text;
-						}
+					if (!empty($this->options['extposts_ids_posts_one_style']) ) {
+						$echosl = '<ul class="card-list group">'.$echosl.'</ul>';
+					}
+					$text = $echosl.$text;
+				} else {
+			return $text;
+		}
 
 
 
@@ -714,7 +759,7 @@ function most_post_id($text) {
 	            }
 	        }
 	    } else {
-	        return $text;  //style="background-color: '.$this->options['svddsvsdvdsvsdvds'].' !important;"
+	        return $text;  
 	    }
 	}
 
@@ -726,9 +771,413 @@ function most_post_id($text) {
 
 	function add_link_to_content_css() {
 
+echo "<script>
+	
+	
+	
+
+	
+
+</script>";
 
 
-echo '<style>.star-rating{height:12.5px;position:relative;width:110px;display:inline-block}.star-rating:before{background-image:url(http://webitcoinslotsgambling.xyz/wp-content/uploads/primer_2-01.svg)!important}.star-rating:before,.star-rating>span{width:110px;display:block;height:20px;position:absolute}.star-rating:before,.star-rating>span:before{top:0;background-repeat:repeat-x;background-size:cover;left:0;right:0;content:"";bottom:0}.star_rating_afte{font-size:15px;padding-left:11px}.star-rating>span{text-indent:-10000px;overflow:hidden}.star-rating:before,.star-rating>span{width:110px;display:block;height:20px;position:absolute}.star-rating>span:before{background-image:url(http://webitcoinslotsgambling.xyz/wp-content/uploads/primer_1-01.svg)!important;display:block;height:20px;position:absolute;text-indent:10000px;width:114px}.star_rating_after{font-size:14px;padding-left:5px}.card__rating{margin-top:15px}.star-rating--after{position:relative;font-size:15px;font-style:italic;top:3px}.static{with:100%}.ben_1,.ben_2,.ben_3{width:31%;height:171px;margin:5px;display:inline-block;position:relative;box-shadow:0 3px 20px rgba(0,0,0,.25),inset 0 2px 0 rgba(255,255,255,.6),0 2px 0 rgba(0,0,0,.1),inset 0 0 20px rgba(0,0,0,.1)}.ben_1:hover,.ben_2:hover,.ben_3:hover{box-shadow:inset 0 0 20px rgba(0,0,0,.2),0 2px 0 rgba(255,255,255,.4),0 2px 0 rgba(0,0,0,.1);-moz-box-shadow:inset 0 0 20px rgba(0,0,0,.2),0 2px 0 rgba(255,255,255,.4),0 2px 0 rgba(0,0,0,.1);-webkit-box-shadow:inset 0 0 20px rgba(0,0,0,.2),0 2px 0 rgba(255,255,255,.4),0 2px 0 rgba(0,0,0,.1);-o-box-shadow:inset 0 0 20px rgba(0,0,0,.2),0 2px 0 rgba(255,255,255,.4),0 2px 0 rgba(0,0,0,.1);-ms-box-shadow:inset 0 0 20px rgba(0,0,0,.2),0 2px 0 rgba(255,255,255,.4),0 2px 0 rgba(0,0,0,.1)}.ben_1 img,.ben_2 img,.ben_3 img{position:absolute;left:15%;top:-7%;border-radius:15px}.ben_1:before,.ben_2:before,.ben_3:before{content:"";position:absolute;width:100%;height:100%}.button_k{height:35px;width:100%;background-color:rgba(191,191,191,0.22);position:absolute;bottom:0;color:#000;font-weight:700}.fa-chevron-right:before{content:"\f054";color:#ff9e00;margin-left:10px;font-size:19px}.ben_2:before{background:rgba(230,230,230,0.48)}.ben_1:before{background:rgba(230,230,230,0.48)}.ben_3:before{background:rgba(230,230,230,0.48)}@media screen and (max-width: 960px){.ben_1 img,.ben_2 img,.ben_3 img{left:8%}}@media screen and (max-width: 620px){.ben_1 img,.ben_2 img,.ben_3 img{left:3%}center{line-height:1}thumbnail.wp-post-image{width:130px;height:130px}.mrg-slot-card-img.lazy{height:188px}.myh1{font-size:14px}.mrg-slot-play-btn a{font-size:21px!important;height:32px;padding-top:1px}}@media screen and (max-width: 520px){.ben_1,.ben_2,.ben_3{width:60%}.attachment-thumbnail.size-thumbnail.wp-post-image{max-width:160px;max-height:160px}.ben_1 img,.ben_2 img,.ben_3 img{left:17%}center{line-height:2;font-size:18px}.mrg-slots-cards{width:45%!important}}@media screen and (max-width: 420px){.attachment-thumbnail.size-thumbnail.wp-post-image{max-width:80%;max-height:80%}.ben_1 img,.ben_2 img,.ben_3 img{left:3%}}@media screen and (max-width: 400px){center{line-height:1}.ben_1 img,.ben_2 img,.ben_3 img{left:7%;top:1px}.mrg-slots-cards{width:70%!important}}@media screen and (max-width: 300px){.ben_1,.ben_2,.ben_3{width:90%}.ben_1 img,.ben_2 img,.ben_3 img{left:10%}.mrg-slots-cards{width:95%!important}h2,.h2{font-size:23px}}.mrg-slots-cards .mrg-slot-info{padding:3px;background:#000;padding:3px;position:absolute;display:block;bottom:0;width:100%}.mrg-slots-cards{width:31%;display:inline-block;margin:5px 5px 15px}.mrg-slot-card-img.lazy{background-color:#000;position:relative;height:220px}.pabz{text-align:center;margin:0;padding:5px 0}.myh1{font-size:17px;margin-top:7px;text-align:center;text-transform:capitalize;font-weight:600}.mrg-slot-play-btn a{display:block;width:100%;height:45px;padding-top:5px;line-height:34px;font-weight:700;text-align:center;background:#ffc01a;text-transform:uppercase;font-size:29px!important;color:#1a1a1a!important;transform-style:preserve-3d;border-bottom-left-radius:5px;border-bottom-right-radius:5px}.mrg-slot-play-btn a:hover{color:#FDFDFD!important;background:#0381E9}.attachment-thumbnail.size-thumbnail.wp-post-image{width:150px;height:150px}</style>';
+
+echo '<style>
+
+ul.card_list_group {
+    margin: 0;
+}
+li.card-list__item {
+    width: 31%;
+    margin-bottom: 30px;
+    border: 1px solid #cacaca;
+    height: 350px;
+    display: inline-block;
+    margin-left: 5px;
+    margin-right: 5px;
+    vertical-align: top;
+    border-radius: 11px;
+}   
+.card_font {
+    height: 100%;
+    box-shadow: 0 1px 2px 0 rgba(0,0,0,.3);
+    border-radius: 4px;
+}
+.card_back {
+        background: red;
+         top:0;
+         left:0;
+         backface-visibility: visible;
+}
+.card_1 {
+    height: 50%;
+    rgba(236, 236, 236, 0.39);
+    position: relative;
+    border-top-left-radius: 11px;
+    border-top-right-radius: 11px;
+}
+.card_2 {
+    height: 50%;
+    border-bottom-left-radius: 11px;
+    border-bottom-right-radius: 11px;
+    background-color: #fff;
+}
+.ahrefahref {
+    position: relative;
+}
+.fa-info-circle:before {
+    content: "\f05a";
+    vertical-align:text-top;
+    margin-left: 170px;
+    font-size: 27px;
+    color: rgba(64, 64, 64, 0.56);
+    position: absolute;
+    top: -5px;
+    left: 11px;
+}
+.card__ratingq {
+    margin-top: 15px;
+    text-align: center;
+}
+.starq-ratingq {
+    height: 12.5px;
+    position: relative;
+    margin-right: 7px;
+    width: 156px;
+    display: inline-block;
+}
+.starq-ratingq:before {
+    background-image: url(http://casinoyour.bid/wp-content/themes/colorist/img/stars-empty.svg)!important;
+}
+.starq-ratingq:before, .starq-ratingq>span {
+    width: 156px;
+    display: block;
+    height: 14px;
+    position: absolute;
+}
+.starq-ratingq:before, .starq-ratingq>span:before {
+    top: 0;
+    background-repeat: repeat-x;
+    background-size: cover;
+    left: 0;
+    right: 0;
+    content: "";
+    bottom: 0;
+}
+.starq_ratingq_afte {
+    font-size: 15px;
+    padding-left: 11px;
+}
+.starq-ratingq>span {
+    text-indent: -10000px;
+    overflow: hidden;
+}
+.starq-ratingq:before, .starq-ratingq>span {
+    width: 156px;
+    display: block;
+    height: 14px;
+    position: absolute;
+}
+.starq-ratingq>span:before {
+    background-image: url(http://casinoyour.bid/wp-content/themes/colorist/img/stars-full.svg)!important;
+    display: block;
+    height: 14px;
+    position: absolute;
+    text-indent: 10000px;
+}
+.starq_ratingq_after {
+    font-size: 14px;
+    padding-left: 5px;
+}
+.text_container {
+    color: rgba(56, 56, 56, 0.46);
+    padding-top: 25px;
+    padding-left: 20px;
+}    
+.text_container h5  {
+    color: rgba(56, 56, 56, 0.71);
+}
+.card_status_card_status_with_action {
+    display: inline-block;
+}
+.abzac_gertified  {
+    color: rgb(255, 93, 93);
+    font-weight: bolder;
+    margin-left: 0;
+    width: 100%;
+}
+*,:after,:before {
+    box-sizing: inherit
+}
+body {
+    margin: 0;
+    background-color: #f1f1f1;
+    color: #26292D;
+    font-family: ProximaNova,Helvetica,Arial,sans-serif;
+    font-size: 16px;
+    line-height: 30px;
+}
+html {
+    box-sizing: border-box;
+}
+.btn,.write__textarea--editable button {
+    border-radius: 4px;
+    height: 45px;
+    line-height: 51px;
+    font-size: 12px;
+    letter-spacing: .15em;
+    font-weight: 700;
+    display: inline-block;
+    text-transform: uppercase;
+    border: none
+}
+.btn--cta {
+    background: #2396F7;
+    text-align: center
+}
+.btn--cta:hover {
+    background-color: #65b6fa;
+    color: #f8f8f8
+}
+.card-list {
+    margin: 0 -15px
+}
+.card__back,.card__front {
+    transition: transform .6s cubic-bezier(.39,.2,.37,1.44)
+}
+.card-list__item {
+    float: left;
+    width: 20%;
+    min-height: 50px;
+    perspective: 687px
+}
+.card-list__item.filter {
+    opacity: .1
+}
+.card,.card__back {
+    border-radius: 11px;
+    width: 100%
+}
+.card {
+    background: 0 0;
+    position: relative
+}
+.card__front {
+    overflow: hidden;
+    box-shadow: 0 1px 2px 0 rgba(0,0,0,.3);
+    border-radius: 11px;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    transform: rotateY(0);
+    position: relative;
+    z-index: 2
+}
+.card__back {
+    background: #fff;
+    box-shadow: none;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    transform: rotateY(-180deg);
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    padding: 63px 18px 18px;
+    z-index: 1
+}
+.card--show-back .card__front {
+    transform: rotateY(180deg);
+    z-index: 1;
+    box-shadow: none
+}
+.card--show-back .card__back {
+    transform: rotateY(0);
+    z-index: 2;
+    box-shadow: 0 1px 2px 0 rgba(0,0,0,.3)
+}
+.card__close-info,.card__open-info {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    opacity: .3;
+    cursor: pointer;
+    background-color: #f8f8f8;
+    border-radius: 24px;
+    height: 24px;
+    transition: .1s
+}
+.card__close-info:hover,.card__open-info:hover {
+    opacity: 1;
+    transition: .1s
+}
+.card__media {
+    display: block;
+    height: 180px;
+    background: #f8f8f8;
+    box-shadow: 0 1px 0 #dddee1;
+    padding-top: 45px;
+    text-align: center;
+    border-radius: 11px 11px 0 0;
+    overflow: hidden;
+    color: #26292D
+}
+.card__media img {
+    border-radius: 50%
+}
+.card__media--rating {
+    padding-top: 30px;
+    color: #26292D
+}
+.card__desc {
+    padding: 0 18px 0 18px;
+    height: 170px;
+    background: #fff
+}
+.card__desc-title {
+    font-size: 16px;
+    line-height: 1.5;
+    margin-top: 11px;
+    color: #3C3C3C;
+    margin-bottom: 4px;
+    word-break: break-word
+}
+.card__desc-body {
+    font-size: 14px;
+    line-height: 1.64;
+    color: #888;
+    word-break: break-word
+}
+.card__action,.card__status {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: .05em
+}
+.card__status {
+    position: absolute;
+    left: 20px;
+    color: #3C3C3C;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 83%;
+    overflow: hidden;
+    padding-bottom: 0px;
+    bottom: 7px
+}
+.card__action,.card__desc-btn {
+    bottom: 20px;
+    position: absolute
+}
+.card__status.card__status--mobile {
+    display: none
+}
+.card__status--with-action {
+        color: #2396f7;
+    max-width: 60%
+}
+.card__action {
+    right: 20px;
+    color: #26292D;
+    transition: .1s
+}
+.card__action:hover {
+    opacity: .4;
+    transition: .1s
+}
+.card__rating.rating--mobile {
+    display: none
+}
+.card__desc-btn {
+    left: 20px;
+    right: 20px
+}
+.rating {
+    font-size: 14px
+}
+.star-rating {
+    height: 14px;
+    position: relative;
+    width: 156px
+}
+.star-rating--after {
+    padding-left: 7px;
+    position: relative;
+    font-size: 14px;
+    top: -1px
+}
+.star-rating:before,.star-rating>span:before {
+    top: 0;
+    background-repeat: repeat-x;
+    background-size: cover;
+    left: 0;
+    right: 0;
+    content: "";
+    bottom: 0
+}
+.star-rating--mobile-value {
+    display: none
+}
+.star-rating--mobile>span:before {
+    background-repeat: repeat-x;
+    background-size: cover;
+    display: inline-block;
+    content: "";
+    height: 13px;
+    width: 13px
+}
+.star-rating:before,.star-rating>span {
+    width: 156px;
+    display: block;
+    height: 14px;
+    position: absolute
+}
+.star-rating:before {
+    background-image: url(http://casinoyour.bid/wp-content/themes/colorist/img/stars-empty.svg)!important
+}
+.star-rating>span {
+    text-indent: -10000px;
+    overflow: hidden
+}
+.star-rating>span:before {
+    background-image: url(http://casinoyour.bid/wp-content/themes/colorist/img/stars-full.svg)!important;
+    display: block;
+    height: 14px;
+    position: absolute;
+    text-indent: 10000px
+}
+.fa-toggle-on:before {
+    content: "\f205";
+    font-size: 20px;
+}
+.fa-toggle-off:before {
+    content: "\f204";
+    font-size: 20px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.star-rating{height:12.5px;position:relative;width:110px;display:inline-block}.star-rating:before{background-image:url(http://webitcoinslotsgambling.xyz/wp-content/uploads/primer_2-01.svg)!important}.star-rating:before,.star-rating>span{width:110px;display:block;height:20px;position:absolute}.star-rating:before,.star-rating>span:before{top:0;background-repeat:repeat-x;background-size:cover;left:0;right:0;content:"";bottom:0}.star_rating_afte{font-size:15px;padding-left:11px}.star-rating>span{text-indent:-10000px;overflow:hidden}.star-rating:before,.star-rating>span{width:110px;display:block;height:20px;position:absolute}.star-rating>span:before{background-image:url(http://webitcoinslotsgambling.xyz/wp-content/uploads/primer_1-01.svg)!important;display:block;height:20px;position:absolute;text-indent:10000px;width:114px}.star_rating_after{font-size:14px;padding-left:5px}.card__rating{margin-top:15px}.star-rating--after{position:relative;font-size:15px;font-style:italic;top:3px}.static{with:100%}.ben_1,.ben_2,.ben_3{width:31%;height:171px;margin:5px;display:inline-block;position:relative;box-shadow:0 3px 20px rgba(0,0,0,.25),inset 0 2px 0 rgba(255,255,255,.6),0 2px 0 rgba(0,0,0,.1),inset 0 0 20px rgba(0,0,0,.1)}.ben_1:hover,.ben_2:hover,.ben_3:hover{box-shadow:inset 0 0 20px rgba(0,0,0,.2),0 2px 0 rgba(255,255,255,.4),0 2px 0 rgba(0,0,0,.1);-moz-box-shadow:inset 0 0 20px rgba(0,0,0,.2),0 2px 0 rgba(255,255,255,.4),0 2px 0 rgba(0,0,0,.1);-webkit-box-shadow:inset 0 0 20px rgba(0,0,0,.2),0 2px 0 rgba(255,255,255,.4),0 2px 0 rgba(0,0,0,.1);-o-box-shadow:inset 0 0 20px rgba(0,0,0,.2),0 2px 0 rgba(255,255,255,.4),0 2px 0 rgba(0,0,0,.1);-ms-box-shadow:inset 0 0 20px rgba(0,0,0,.2),0 2px 0 rgba(255,255,255,.4),0 2px 0 rgba(0,0,0,.1)}.ben_1 img,.ben_2 img,.ben_3 img{position:absolute;left:15%;top:-7%;border-radius:15px}.ben_1:before,.ben_2:before,.ben_3:before{content:"";position:absolute;width:100%;height:100%}.button_k{height:35px;width:100%;background-color:rgba(191,191,191,0.22);position:absolute;bottom:0;color:#000;font-weight:700}.fa-chevron-right:before{content:"\f054";color:#ff9e00;margin-left:10px;font-size:19px}.ben_2:before{background:rgba(230,230,230,0.48)}.ben_1:before{background:rgba(230,230,230,0.48)}.ben_3:before{background:rgba(230,230,230,0.48)}@media screen and (max-width: 960px){.ben_1 img,.ben_2 img,.ben_3 img{left:8%}}@media screen and (max-width: 620px){.ben_1 img,.ben_2 img,.ben_3 img{left:3%}center{line-height:1}thumbnail.wp-post-image{width:130px;height:130px}.mrg-slot-card-img.lazy{height:188px}.myh1{font-size:14px}.mrg-slot-play-btn a{font-size:21px!important;height:32px;padding-top:1px}}@media screen and (max-width: 520px){.ben_1,.ben_2,.ben_3{width:60%}.attachment-thumbnail.size-thumbnail.wp-post-image{max-width:160px;max-height:160px}.ben_1 img,.ben_2 img,.ben_3 img{left:17%}center{line-height:2;font-size:18px}.mrg-slots-cards{width:45%!important}}@media screen and (max-width: 420px){.attachment-thumbnail.size-thumbnail.wp-post-image{max-width:80%;max-height:80%}.ben_1 img,.ben_2 img,.ben_3 img{left:3%}}@media screen and (max-width: 400px){center{line-height:1}.ben_1 img,.ben_2 img,.ben_3 img{left:7%;top:1px}.mrg-slots-cards{width:70%!important}}@media screen and (max-width: 300px){.ben_1,.ben_2,.ben_3{width:90%}.ben_1 img,.ben_2 img,.ben_3 img{left:10%}.mrg-slots-cards{width:95%!important}h2,.h2{font-size:23px}}.mrg-slots-cards .mrg-slot-info{padding:3px;background:#000;padding:3px;position:absolute;display:block;bottom:0;width:100%}.mrg-slots-cards{width:31%;display:inline-block;margin:5px 5px 15px}.mrg-slot-card-img.lazy{background-color:#000;position:relative;height:220px}.pabz{text-align:center;margin:0;padding:5px 0}.myh1{font-size:17px;margin-top:7px;text-align:center;text-transform:capitalize;font-weight:600}.mrg-slot-play-btn a{display:block;width:100%;height:45px;padding-top:5px;line-height:34px;font-weight:700;text-align:center;background:#ffc01a;text-transform:uppercase;font-size:29px!important;color:#1a1a1a!important;transform-style:preserve-3d;border-bottom-left-radius:5px;border-bottom-right-radius:5px}.mrg-slot-play-btn a:hover{color:#FDFDFD!important;background:#0381E9}.attachment-thumbnail.size-thumbnail.wp-post-image{width:150px;height:150px}</style>';
 		echo '<style>.play-for{ -moz-box-shadow:0 10px 14px -7px #276873;-webkit-box-shadow:0 10px 14px -7px #276873;box-shadow:0 10px 14px -7px #276873;background:-webkit-gradient(linear,left top,left bottom,color-stop(.05,#599bb3),color-stop(1,#408c99));background:-moz-linear-gradient(top,#599bb3 5%,#408c99 100%);background:-webkit-linear-gradient(top,#599bb3 5%,#408c99 100%);background:-o-linear-gradient(top,#599bb3 5%,#408c99 100%);background:-ms-linear-gradient(top,#599bb3 5%,#408c99 100%);background:linear-gradient(to bottom,#599bb3 5%,#408c99 100%);filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=\'#599bb3\', endColorstr=\'#408c99\', GradientType=0);
 
 		    background-color:#599bb3;-moz-border-radius:8px;-webkit-border-radius:8px;border-radius:8px;display:inline-block;cursor:pointer;color:#fff;font-family:Arial;font-size:15px;font-weight:700;padding:13px 32px;text-decoration:none;text-shadow:0 1px 0 #3d768a}.play-for:hover{background:-webkit-gradient(linear,left top,left bottom,color-stop(.05,#408c99),color-stop(1,#599bb3));background:-moz-linear-gradient(top,#408c99 5%,#599bb3 100%);background:-webkit-linear-gradient(top,#408c99 5%,#599bb3 100%);background:-o-linear-gradient(top,#408c99 5%,#599bb3 100%);background:-ms-linear-gradient(top,#408c99 5%,#599bb3 100%);background:linear-gradient(to bottom,#408c99 5%,#599bb3 100%);filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=\'#408c99\', endColorstr=\'#599bb3\', GradientType=0);background-color:#408c99}.play-for:active{position:relative;top:1px}.grid figure,.grid li{position:relative;margin:0}.cs-style-3 figure,.cs-style-4 figure>div{overflow:hidden}.grid{padding:10px 20px 0;max-width:1300px;margin:0 auto;list-style:none;text-align:center}.grid li{display:inline-block;padding:20px;text-align:left}.grid figure img{max-width:100%;display:block;position:relative}.grid figcaption{position:absolute;top:0;left:0;padding:5px 0 0 15px;background:#2c3f52;color:#ed4e6e}.grid figcaption h3{margin:0;padding:0;color:#fff}.grid figcaption span:before{content:"by "}.grid figcaption a{text-align:center;padding:5px 10px;border-radius:2px;display:inline-block;background:#ed4e6e;color:#fff}.cs-style-1 figcaption{height:100%;width:100%;opacity:0;text-align:center;-webkit-backface-visibility:hidden;-moz-backface-visibility:hidden;backface-visibility:hidden;-webkit-transition:-webkit-transform .3s,opacity .3s;-moz-transition:-moz-transform .3s,opacity .3s;transition:transform .3s,opacity .3s}.cs-style-4 figcaption,.cs-style-5 figcaption{-webkit-backface-visibility:hidden;-moz-backface-visibility:hidden}.cs-style-1 figure.cs-hover figcaption,.no-touch .cs-style-1 figure:hover figcaption{opacity:1;-webkit-transform:translate(15px,15px);-moz-transform:translate(15px,15px);-ms-transform:translate(15px,15px);transform:translate(15px,15px)}.cs-style-1 figcaption h3{margin-top:70px}.cs-style-1 figcaption span{display:block}.cs-style-1 figcaption a{margin-top:30px}.cs-style-2 figure img{z-index:10;-webkit-transition:-webkit-transform .4s;-moz-transition:-moz-transform .4s;transition:transform .4s}.cs-style-2 figure.cs-hover img,.no-touch .cs-style-2 figure:hover img{-webkit-transform:translateY(-90px);-moz-transform:translateY(-90px);-ms-transform:translateY(-90px);transform:translateY(-90px)}.cs-style-2 figcaption{height:90px;width:100%;top:auto;bottom:0}.cs-style-2 figcaption a{position:absolute;right:20px;top:30px}.cs-style-3 figure img{-webkit-transition:-webkit-transform .4s;-moz-transition:-moz-transform .4s;transition:transform .4s}.cs-style-3 figure.cs-hover img,.no-touch .cs-style-3 figure:hover img{-webkit-transform:translateY(-50px);-moz-transform:translateY(-50px);-ms-transform:translateY(-50px);transform:translateY(-50px)}.cs-style-3 figcaption{height:100px;width:100%;top:auto;bottom:0;opacity:0;-webkit-transform:translateY(100%);-moz-transform:translateY(100%);-ms-transform:translateY(100%);transform:translateY(100%);-webkit-transition:-webkit-transform .4s,opacity .1s .3s;-moz-transition:-moz-transform .4s,opacity .1s .3s;transition:transform .4s,opacity .1s .3s}.cs-style-3 figcaption a,.cs-style-4 figcaption a,.cs-style-5 figure a,.cs-style-6 figcaption a,.cs-style-7 figcaption a{position:absolute;bottom:20px;right:20px}.cs-style-3 figure.cs-hover figcaption,.no-touch .cs-style-3 figure:hover figcaption{opacity:1;-webkit-transform:translateY(0);-moz-transform:translateY(0);-ms-transform:translateY(0);transform:translateY(0);-webkit-transition:-webkit-transform .4s,opacity .1s;-moz-transition:-moz-transform .4s,opacity .1s;transition:transform .4s,opacity .1s}.cs-style-4 li{-webkit-perspective:1700px;-moz-perspective:1700px;perspective:1700px;-webkit-perspective-origin:0 50%;-moz-perspective-origin:0 50%;perspective-origin:0 50%}.cs-style-4 figure{-webkit-transform-style:preserve-3d;-moz-transform-style:preserve-3d;transform-style:preserve-3d}.cs-style-4 figure img{-webkit-transition:-webkit-transform .4s;-moz-transition:-moz-transform .4s;transition:transform .4s}.cs-style-4 figure.cs-hover img,.no-touch .cs-style-4 figure:hover img{-webkit-transform:translateX(25%);-moz-transform:translateX(25%);-ms-transform:translateX(25%);transform:translateX(25%)}.cs-style-4 figcaption{height:100%;width:50%;opacity:0;backface-visibility:hidden;-webkit-transform-origin:0 0;-moz-transform-origin:0 0;transform-origin:0 0;-webkit-transform:rotateY(-90deg);-moz-transform:rotateY(-90deg);transform:rotateY(-90deg);-webkit-transition:-webkit-transform .4s,opacity .1s .3s;-moz-transition:-moz-transform .4s,opacity .1s .3s;transition:transform .4s,opacity .1s .3s}.cs-style-5 figcaption,.cs-style-6 figcaption,.cs-style-7 figcaption{height:100%;width:100%}.cs-style-4 figure.cs-hover figcaption,.no-touch .cs-style-4 figure:hover figcaption{opacity:1;-webkit-transform:rotateY(0);-moz-transform:rotateY(0);transform:rotateY(0);-webkit-transition:-webkit-transform .4s,opacity .1s;-moz-transition:-moz-transform .4s,opacity .1s;transition:transform .4s,opacity .1s}.cs-style-5 figure img{z-index:10;-webkit-transition:-webkit-transform .4s;-moz-transition:-moz-transform .4s;transition:transform .4s}.cs-style-5 figure.cs-hover img,.no-touch .cs-style-5 figure:hover img{-webkit-transform:scale(.4);-moz-transform:scale(.4);-ms-transform:scale(.4);transform:scale(.4)}.cs-style-5 figcaption{opacity:0;-webkit-transform:scale(.7);-moz-transform:scale(.7);-ms-transform:scale(.7);transform:scale(.7);backface-visibility:hidden;-webkit-transition:-webkit-transform .4s,opacity .4s;-moz-transition:-moz-transform .4s,opacity .4s;transition:transform .4s,opacity .4s}.cs-style-5 figure.cs-hover figcaption,.no-touch .cs-style-5 figure:hover figcaption{-webkit-transform:scale(1);-moz-transform:scale(1);-ms-transform:scale(1);transform:scale(1);opacity:1}.cs-style-6 figure img{z-index:10;-webkit-transition:-webkit-transform .4s;-moz-transition:-moz-transform .4s;transition:transform .4s}.cs-style-6 figure.cs-hover img,.no-touch .cs-style-6 figure:hover img{-webkit-transform:translateY(-50px) scale(.5);-moz-transform:translateY(-50px) scale(.5);-ms-transform:translateY(-50px) scale(.5);transform:translateY(-50px) scale(.5)}.cs-style-6 figcaption h3{margin-top:60%}.cs-style-7 li:first-child{z-index:6}.cs-style-7 li:nth-child(2){z-index:5}.cs-style-7 li:nth-child(3){z-index:4}.cs-style-7 li:nth-child(4){z-index:3}.cs-style-7 li:nth-child(5){z-index:2}.cs-style-7 li:nth-child(6){z-index:1}.cs-style-7 figure img{z-index:10}.cs-style-7 figcaption{opacity:0;-webkit-backface-visibility:hidden;-moz-backface-visibility:hidden;backface-visibility:hidden;-webkit-transition:opacity .3s,height .3s,box-shadow .3s;-moz-transition:opacity .3s,height .3s,box-shadow .3s;transition:opacity .3s,height .3s,box-shadow .3s;box-shadow:0 0 0 0 #2c3f52}.cs-style-7 figure.cs-hover figcaption,.no-touch .cs-style-7 figure:hover figcaption{opacity:1;height:130%;box-shadow:0 0 0 10px #2c3f52}.cs-style-7 figcaption h3{margin-top:86%}.cs-style-7 figcaption a,.cs-style-7 figcaption h3,.cs-style-7 figcaption span{opacity:0;-webkit-transition:opacity 0s;-moz-transition:opacity 0s;transition:opacity 0s}.cs-style-7 figure.cs-hover figcaption a,.cs-style-7 figure.cs-hover figcaption h3,.cs-style-7 figure.cs-hover figcaption span,.no-touch .cs-style-7 figure:hover figcaption a,.no-touch .cs-style-7 figure:hover figcaption h3,.no-touch .cs-style-7 figure:hover figcaption span{-webkit-transition:opacity .3s .2s;-moz-transition:opacity .3s .2s;transition:opacity .3s .2s;opacity:1}@media screen and (max-width:31.5em){.grid{padding:5px 10px 0}.grid li{width:100%;min-width:300px}}</style>';

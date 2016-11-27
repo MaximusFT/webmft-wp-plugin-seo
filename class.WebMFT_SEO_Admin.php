@@ -503,7 +503,7 @@ class WebMFT_SEO_Admin extends WebMFT_SEO {
 
 
 
-                
+
                 <div id="extidpost" class="wp-webmft-tab js-tab-item">
                     <div class="row">
                        <div class="col-md-10">
@@ -512,6 +512,12 @@ class WebMFT_SEO_Admin extends WebMFT_SEO {
                                 <label for="extposts_ids_posts">
                                 <?php $this->display_checkbox('extposts_ids_posts') ?>
                                 Вывод блока
+                                </label>
+                            </div>
+                             <div class="form-group">
+                                <label for="extposts_ids_posts_one_style">
+                                <?php $this->display_checkbox('extposts_ids_posts_one_style') ?>
+                                Включить первый стиль вывода блоков
                                 </label>
                             </div>
                             <div class="form-group">
