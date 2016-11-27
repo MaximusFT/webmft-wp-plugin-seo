@@ -50,6 +50,7 @@ class WebMFT_SEO_Admin extends WebMFT_SEO {
                     <a class="nav-tab" id="hidelinks-tab" href="#top#hidelinks">GoTo</a>
                     <a class="nav-tab" id="extlinks-tab" href="#top#extlinks">Ext Links</a>
                     <a class="nav-tab" id="extposts-tab" href="#top#nupopposts">Widget on Front</a>
+                    <a class="nav-tab" id="extidpost-tab" href="#top#nupopidposts">Id Posts</a>
                 </h2>
                 <?php
                 submit_button();
@@ -400,7 +401,7 @@ class WebMFT_SEO_Admin extends WebMFT_SEO {
                                 ID записывать через запятую
                             </div>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <h4>Cамые новые</h4>
                             <div class="form-group">
                                 <label for="extposts_all_slots">
@@ -426,7 +427,7 @@ class WebMFT_SEO_Admin extends WebMFT_SEO {
                                 ID записывать через запятую
                             </div>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <h4>Cамые новые</h4>
                             <div class="form-group">
                                 <label for="extposts_gamblink_news">
@@ -452,7 +453,7 @@ class WebMFT_SEO_Admin extends WebMFT_SEO {
                                 ID записывать через запятую
                             </div>
                         </div>
-                             <div class="col-md-5">
+                             <div class="col-md-10">
                                 <h4>Categories Name</h4>
                                 <?
                                 $myterms = get_terms('category', 'orderby=count&hide_empty=0');
@@ -493,34 +494,53 @@ class WebMFT_SEO_Admin extends WebMFT_SEO {
                                 <label for="goto_dasdasd">goto_dasdasd</label>
                                 <?php $this->display_input_text('goto_dasdasd', 'color') ?>
                             </div>
-                            <a href="#"  style="background-color:<?php.$this->options["goto_dasdasd"]?>;
-                                                -moz-border-radius:28px;
-                                                -webkit-border-radius:28px;
-                                                border-radius:28px;
-                                                border:1px solid #18ab29;
-                                                display:inline-block;
-                                                cursor:pointer;
-                                                color:#ffffff;
-                                                font-family:Arial;
-                                                font-size:17px;
-                                                padding:16px 31px;
-                                                text-decoration:none;
-                                                text-shadow:0px 1px 0px #2f6627;"class="myButton">green</a>
-
-    
-
-
-
+                            <a href="#" class="myButton">green</a>
                        </div>
                     </div>
                 </div>
+
+
+
+
+
+                
+                <div id="extidpost" class="wp-webmft-tab js-tab-item">
+                    <div class="row">
+                       <div class="col-md-10">
+                            <h4>Вывод постов по айди</h4>
+                            <div class="form-group">
+                                <label for="extposts_ids_posts">
+                                <?php $this->display_checkbox('extposts_ids_posts') ?>
+                                Вывод блока
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label for="extposts_id_nyhnovo_posta">Заголовок перед блоком</label>
+                                <?php $this->display_input_text('extposts_id_nyhnovo_posta') ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+
+
+
+
+
+
+
                 
 				<?php
 				submit_button();
+
 				?>
 			</form>
 		</div>
-		<?php
+		<?php 
 	}
 
     /**
@@ -611,5 +631,6 @@ class WebMFT_SEO_Admin extends WebMFT_SEO {
     public function sanitize_webmft_options( $options ) {
         return $options;
     }
+    
 }
 ?>

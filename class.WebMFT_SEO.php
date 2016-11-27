@@ -49,8 +49,8 @@ class WebMFT_SEO {
 			/**
 			 * Edit название категории при выводе
 			 */
-			//add_action( 'get_the_archive_title', array( $this, 'name_categories' ) );
-			add_action('single_term_title', array( $this, 'name_categories'), 1);
+			add_action( 'get_the_archive_title', array( $this, 'name_categories' ) );
+			//add_action('single_term_title', array( $this, 'name_categories'), 1);
 
 
 			/**
@@ -110,9 +110,6 @@ class WebMFT_SEO {
 			'postview_hold_sec' => 2,
 		);
 	}
-
-
-
 	function name_categories($text){ //изменение названия категории
 		$pageNumsss=(get_query_var('paged')) ? get_query_var('paged') : 1;
 		$thisNameCats = get_category(get_query_var('cat'),false);
@@ -122,9 +119,6 @@ class WebMFT_SEO {
 		$catVklPag = $this->options['category_'.$thisNameCats->slug.'_catVklPaginasia'];
 		$term = get_queried_object()->name;
 		$text = apply_filters( 'single_term_title', $term );
-		
-	
-
 			if (!empty($this->options['category_'.$thisNameCats->slug.'_catVklname']) ) {
 				if (is_category()) 	
 
@@ -144,9 +138,6 @@ class WebMFT_SEO {
 				} else {
 				 return $text;
 				}
-			
-
-
 	}
 	function register_webmft_widgets() {
 		register_widget('WEBMFT_PostMostViewed_Widget');
@@ -257,26 +248,6 @@ class WebMFT_SEO {
 		return $mv_titl;
 
 	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	function header_meta(){
 		global $post;
 
@@ -354,8 +325,13 @@ class WebMFT_SEO {
      * Register the JavaScript for the admin area
      *
      */
+     public function enqueue_admin_stylessssss() {
+       wp_enqueue_style($this->plugin_name, MFT_URL . 'inc/css/webmft-admin-seo-new.css', array(), $this->version, 'all');
+    }
     public function enqueue_admin_styles() {
         wp_enqueue_style($this->plugin_name, MFT_URL . 'inc/css/webmft-admin-seo.css', array(), $this->version, 'all');
+        //wp_enqueue_style($this->plugin_name.'-new', MFT_URL . 'inc/css/webmft-admin-seo-new.css', array(), $this->version, 'all');
+        wp_enqueue_style($this->plugin_name.'-new', MFT_URL . 'inc/css/webmft-admin-seo-new.css', array(), '1.1', 'all');
     }
 	public function enqueue_admin_scripts() {
         wp_enqueue_script($this->plugin_name, MFT_URL . 'inc/js/webmft-admin-seo.js', array('jquery'), $this->version, false);
@@ -562,12 +538,52 @@ class WebMFT_SEO {
 		return array( 'prev' => $prev, 'next' => $next );
 	}
 
+
+function most_post_id($text) {
+		if (is_front_page()){
+				//$id_post = 2690;
+				$post_id = get_post( 2690, ARRAY_A);
+				$title = $post_id['post_title'];
+
+				$thumb = get_the_post_thumbnail( 2690, 'thumbnail' );
+				$echos = '<div class="feffew"><a href="#">'.$thumb.'</a><p>'.$title.'</p></div>';
+		    	$text = $echos.$text;
+		    	echo $text;
+		}
+	    return $text;
+	}
 	/**
 	 * most_viewed_in_fontpage   добавление на главную страницу последних и популярных записей
 	 */
 	function most_viewed_in_fontpage($text) {
 		if (is_front_page()){
-		  		if (!empty($this->options['extposts_featured_slot_machines']) ) {
+				$id_post = $this->options['extposts_id_nyhnovo_posta'];//айди нужно поста
+				//$id_post = '2690,2686';
+				$id_id_post = explode(",", $id_post);
+				
+			
+					foreach ($id_id_post as $id_post) {
+						$post_id = get_post( $id_post, ARRAY_A);
+						$title = $post_id['post_title']; //название поста
+						$thumb = get_the_post_thumbnail( $id_post, 'thumbnail' ); //миниатюра
+						$url = get_permalink($id_post); //урл поста
+						$echosl .= '<div class="feffew"><a href="'. $url .'">'.$thumb.'</a><p>'.$title.'</p></div>';
+				    	
+						
+
+
+				}
+
+				if (!empty($this->options['extposts_ids_posts']) ) {
+					$echosl = '<ul>'.$echosl.'</ul>';
+							$text = $echosl.$text;
+						} else {
+							return $text;
+						}
+
+
+
+				if (!empty($this->options['extposts_featured_slot_machines']) ) {
 		  			$text_1 = '<h2>'.$this->options['extposts_nazanie_h2_before_featured'].'</h2>';
 		  			$text_1_1 ='<h2>'.$this->options['extposts_nazanie_h2_after_featured'].'</h2>';
 		  			$number_blok = $this->options['extposts_kolichestvo_postov'];
