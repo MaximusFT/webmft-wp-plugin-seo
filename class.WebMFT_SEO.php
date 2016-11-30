@@ -54,9 +54,12 @@ class WebMFT_SEO {
 			/**
 			 * Edit название категории при выводе
 			 */
+			add_filter( 'get_the_archive_title', array( $this, 'name_categories') );
 			// add_action( 'get_the_archive_title', array( $this, 'name_categories' ) );
 			add_filter('single_cat_title', array( $this, 'name_categories'));
 			//add_filter('get_the_archive_title', array( $this, 'name_categories'));
+			//add_filter('the_archive_titile', array( $this, 'name_categories_acrhive'));
+			
 
 
 			/**
@@ -118,8 +121,13 @@ class WebMFT_SEO {
 			'postview_hold_sec' => 2,
 		);
 	}
-
+//function name_categories_achive($text){ //изменение названия категории
+ //   $text = apply_filters( 'single_term_title', $term );
+ //    return $text;
+ // }
 	function name_categories($text){ //изменение названия категории
+		 $text = apply_filters( 'single_term_title', $term );
+    // return $text;
 		$pageNumsss=(get_query_var('paged')) ? get_query_var('paged') : 1;
 		$thisNameCats = get_category(get_query_var('cat'),false);
 		$mvs_titl_befor = $this->options['category_'.$thisNameCats->slug.'_name_before']. ' ';
@@ -148,6 +156,7 @@ class WebMFT_SEO {
 				 return $text;
 				}
 	}
+	
 	function register_webmft_widgets() {
 		register_widget('WEBMFT_PostMostViewed_Widget');
 		register_widget('WEBMFT_PostNext_Widget');
@@ -653,14 +662,7 @@ function most_post_id($text) {
 					}
 
 
-				// include 'include/seo-block-posts.php';
-				if (!empty($this->options['extposts_featured_slot_machines']) ) {
-					$text_1 = '<h2>'.$this->options['extposts_nazanie_h2_before_featured'].'</h2>';
-					$text_1_1 ='<h2>'.$this->options['extposts_nazanie_h2_after_featured'].'</h2>';
-					$number_blok = $this->options['extposts_kolichestvo_postov'];
-					$number_id_cat_one = $this->options['extposts_id_postov_one'];
-					$tmp_text = WEBMFT_PostMostViewed_Widget::widget(['format'=>1], ['num'=>$number_blok,'echo'=>1,'cat'=>$number_id_cat_one]);
-				}
+				include 'include/seo-block-posts.php';
 				if (!empty($this->options['extposts_casino_reviews']) ) {
 		  			$text_1_2 = '<h2>'.$this->options['extposts_nazanie_h2_before_casino_reviews'].'</h2>';
 		  			$text_1_1_2 ='<h2>'.$this->options['extposts_nazanie_h2_after_casino_reviews'].'</h2>';
@@ -681,7 +683,7 @@ function most_post_id($text) {
 		  			$number_blok_three = $this->options['extposts_kolichestvo_postov_news_blok'];
 		  			$number_id_cat_three = $this->options['extposts_id_categories_3_blok'];
 		  			$recs_text = WEBMFT_PostNext_Widget::kama_recent_posts($number_blok_three, '', $number_id_cat_three);
-		  		}
+		  		}		  		
 		  		if (!empty($this->options['extposts_before_text']) ) {
 		  			$text = $text_1_2.$rec_copy_text.$text_1_1_2.$text_1.$tmp_text.$text_1_1.$text_2.$rec_text.$text_2_1.$text_3.$recs_text.$text_3_1.$text;
 		  		} else {
