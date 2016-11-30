@@ -1,6 +1,8 @@
 <?php
 
+
 class WebMFT_SEO {
+
 	public $meta_key = 'views';
 
 	protected $option_name = 'webmft_option';
@@ -52,8 +54,9 @@ class WebMFT_SEO {
 			/**
 			 * Edit название категории при выводе
 			 */
-			add_action( 'get_the_archive_title', array( $this, 'name_categories' ) );
-			//add_action('single_term_title', array( $this, 'name_categories'), 1);
+			// add_action( 'get_the_archive_title', array( $this, 'name_categories' ) );
+			add_filter('single_cat_title', array( $this, 'name_categories'));
+			//add_filter('get_the_archive_title', array( $this, 'name_categories'));
 
 
 			/**
@@ -115,6 +118,7 @@ class WebMFT_SEO {
 			'postview_hold_sec' => 2,
 		);
 	}
+
 	function name_categories($text){ //изменение названия категории
 		$pageNumsss=(get_query_var('paged')) ? get_query_var('paged') : 1;
 		$thisNameCats = get_category(get_query_var('cat'),false);
@@ -576,20 +580,13 @@ function most_post_id($text) {
 				    }
 				    $temp = substr($conte, 0, $length);
 				    $contez =  substr($temp, 0, strrpos($temp, ' ') ) . $postfix;
-					
-
-
-
-$length_two=100;
+					$length_two=100;
 					$postfix='...';
 				    if ( strlen($conte) <= $length_two){
 				        return $conte;
 				    }
 				    $temps = substr($conte, 0, $length_two);
 				    $contezq =  substr($temps, 0, strrpos($temps, ' ') ) . $postfix;
-
-
-
 					$numbersl = get_post_meta ($id_post,'views',true);
     				$numral = $numbersl / 100 * 100;
     				$numretigl = $numral /10;
@@ -598,49 +595,71 @@ $length_two=100;
 					} else {
 						$numretigl;
 					}
-//echo "<pre>";
-//print_r($conte);
-//echo "</pre>";
-
-
-
+						//echo "<pre>";
+						//print_r($conte);
+						//echo "</pre>";
 					$thumb = get_the_post_thumbnail( $id_post, array(90,90) ); //миниатюра
 					$url = get_permalink($id_post); //урл поста
-					//$echosl .= '<div class="feffew"><a href="'. $url .'">'.$thumb.'</a><p>'.$title.'</p></div>';
 					if (!empty($this->options['extposts_ids_posts_one_style']) ) {
 					$echosl .= '<li class="card-list__item"><div class="card"><div class="card__front"><span class="card__open-info do-open-info"><i class="fa fa-toggle-on" aria-hidden="true"></i></span><div class="card__media card__media--rating card__media--casino"><a href="'.$url.'">'.$thumb.'</a><div 
-
-					class="card__ratingq ratingq"><div class="starq-ratingq"><span style="width: '.$numral.'%;"></span></div><span class="starq-ratingq--after">'.$numretigl.'</span></div></div>
-
-					<div class="card__desc"><h3 class="card__desc-title card__desc-title--clip"><span class="title">'.$title.'</span></h3><p class="card__status card__status--mobile"><span class="certified">Certified</span></p><p class="card__desc-body">'.$contez.'<p class="card__status card__status--with-action"><i class="fa fa-check-square-o" aria-hidden="true"></i>Certified</p></div><div class="card__action"><a href="/goto/1/" target="_blank">Visit</a></div></div><div class="card__back"><span class="card__close-info do-close-info"><i class="fa fa-toggle-off" aria-hidden="true"></i></span><p class="card__desc-title card__desc-title--clip">'.$title.'</p><p class="card__desc-body">'.$contezq.'</p><a href="/goto/1/" target="_blank" class="btn btn--cta card__desc-btn" style="color: #fff;">Play now</a></div></div></li>';
+					class="card__ratingq ratingq"><div class="starq-ratingq"><span style="width: '.$numral.'%;"></span></div><span class="starq-ratingq--after">'.$numretigl.'</span></div></div><div class="card__desc"><h3 class="card__desc-title card__desc-title--clip"><span class="title">'.$title.'</span></h3><p class="card__status card__status--mobile"><span class="certified">Certified</span></p><p class="card__desc-body">'.$contez.'<p class="card__status card__status--with-action"><i class="fa fa-check-square-o" aria-hidden="true"></i>Certified</p></div><div class="card__action"><a href="/goto/1/" target="_blank">Visit</a></div></div><div class="card__back"><span class="card__close-info do-close-info"><i class="fa fa-toggle-off" aria-hidden="true"></i></span><p class="card__desc-title card__desc-title--clip">'.$title.'</p><p class="card__desc-body">'.$contezq.'</p><a href="/goto/1/" target="_blank" class="btn btn--cta card__desc-btn" style="color: #fff; padding-top: 0;">Play now</a></div></div></li>';
 						}
 
-				}
 
+					if (!empty($this->options['extposts_ids_posts_two_style']) ) {
+					$echosl_1 .= '<li class="games-list__item"><div class="game-box " style="width:184px;height:145px;"><span class="imageloader loading game-box__img-holder">'.$thumb.'</span><div class="game-box__action-content"><div class="game-box__align-content"><h3 class="game-box__title">'.$title.'</h3><div class="game-box__holder"><a style="color: #000000;" class="button button_style_success button_size_m" href="#"><span class="button__text">Play</span></a></div><div class="game-box__demo-holder"><a class="game-box__pseudo-link" rel="nofollow" href="'.$url.'">Review</a></div></div></div></div></li>';
+					}
+					if (!empty($this->options['extposts_ids_posts_three_style']) ) {
+					$echosl_2 .= '<div class="casino-box"> <div class="thumbnail"> <a href="/goto/1/" target="_blank"> '.$thumb.'<a href="/goto/1/" target="_blank"><button class="btn-tocasino btn-orange">'.$title.'</button>  </a>  </a></div></div>';
+					}
+					if (!empty($this->options['extposts_ids_posts_four_style']) ) {
+						$thumb = get_the_post_thumbnail( $id_post, array(150,140) );
+					$echosl_3 .= '<div class="mrg-slots-cards"><a href="'.$url.'"><div class="mrg-slot-card-img lazy"><p class="pabz">'.$thumb.'</p><div class="mrg-slot-info"><h1 class="myh1">'.$title.'</h1></div></div></a><div class="mrg-slot-play-btn"><a href="'.$url.'">Review</a></div></div>';
+					}
+					if (!empty($this->options['extposts_ids_posts_five_style']) ) {
+						$thumb = get_the_post_thumbnail( $id_post, array(150,140) );
+					$echosl_4 .= '<div class="ben_1" style="height: 201px;" ><a href="/goto/1/" target="_blank"><div class="class_imf">'.$thumb.'</div></a><div class="button_k"><a href="'.$url.'" style="text-decoration: none; line-height: 35px;"><center style="color: rgba(89, 94, 99, 0.91);">'.$title.'</center> </a></div></div>';
+					}
+    
+
+
+
+
+	
+
+
+
+
+
+
+				}//foreach
 				if (!empty($this->options['extposts_ids_posts']) ) {
 					if (!empty($this->options['extposts_ids_posts_one_style']) ) {
 						$echosl = '<ul class="card-list group">'.$echosl.'</ul>';
 					}
-					$text = $echosl.$text;
-				} else {
-			return $text;
-		}
+					if (!empty($this->options['extposts_ids_posts_two_style']) ) {
+						$echosl_1 = '<ul class="games-list">'.$echosl_1.'</ul>';
+					}
+					if (!empty($this->options['extposts_ids_posts_three_style']) ) {
+						$echosl_2 = '<div class="loop-container cf">'.$echosl_2.'</div>';
+					}
+					if (!empty($this->options['extposts_ids_posts_four_style']) ) {
+						$echosl_3 = '<div class="post-most-viewed">'.$echosl_3.'</div>';
+					}
+					if (!empty($this->options['extposts_ids_posts_four_style']) ) {
+						$echosl_4 = '<div class="static">'.$echosl_4.'</div>';
+					}
+					$text = $text.$echosl.$echosl_1.$echosl_2.$echosl_3.$echosl_4;
+					}
 
 
-
-				if (!empty($this->options['extposts_featured_slot_machines']) ) {
-		  			$text_1 = '<h2>'.$this->options['extposts_nazanie_h2_before_featured'].'</h2>';
-		  			$text_1_1 ='<h2>'.$this->options['extposts_nazanie_h2_after_featured'].'</h2>';
-		  			$number_blok = $this->options['extposts_kolichestvo_postov'];
-		  			$number_id_cat_one = $this->options['extposts_id_postov_one'];
-		  			$tmp_text = WEBMFT_PostMostViewed_Widget::widget(['format'=>1], ['num'=>$number_blok,'echo'=>1,'cat'=>$number_id_cat_one]);
-		  		}
+				include 'include/seo-block-posts.php';
 				if (!empty($this->options['extposts_casino_reviews']) ) {
 		  			$text_1_2 = '<h2>'.$this->options['extposts_nazanie_h2_before_casino_reviews'].'</h2>';
 		  			$text_1_1_2 ='<h2>'.$this->options['extposts_nazanie_h2_after_casino_reviews'].'</h2>';
 		  			$number_blok_one = $this->options['extposts_kolichestvo_postov_casino_reviews'];
 		  			$number_id_cat_one_one = $this->options['extposts_id_postov_one_one'];
-		  			$rec_copy_text = WEBMFT_PostMostViewed_Widget::widget(['format'=>2], ['num'=>$number_blok_one,'echo'=>1, 'cat'=>$number_id_cat_one_one]);
+		  			$rec_copy_text = WEBMFT_PostMostViewed_Widget::widget(['format'=>2], ['num'=>$number_blok_one, 'echo'=>1, 'cat'=>$number_id_cat_one_one]);
 				}
 		  		if (!empty($this->options['extposts_all_slots']) ) {
 		  			$text_2 = '<h2>'.$this->options['extposts_nazanie_h2_all_slots'].'</h2>';
@@ -659,7 +678,7 @@ $length_two=100;
 		  		if (!empty($this->options['extposts_before_text']) ) {
 		  			$text = $text_1_2.$rec_copy_text.$text_1_1_2.$text_1.$tmp_text.$text_1_1.$text_2.$rec_text.$text_2_1.$text_3.$recs_text.$text_3_1.$text;
 		  		} else {
-		    		$text = $text.$text_1_2.$rec_copy_text.$text_1_1_2.$text_1.'<br>'.$tmp_text.'<br>'.$text_1_1.$text_2.'<br>'.$rec_text.'<br>'.$text_2_1.$text_3.$recs_text.$text_3_1;
+		    		$text = $text.$text_1_2.$rec_copy_text.$text_1_1_2.$text_1.$tmp_text.$text_1_1.$text_2.$rec_text.$text_2_1.$text_3.$recs_text.$text_3_1;
 		  		}
 		}
 	    return $text;
@@ -732,21 +751,24 @@ $length_two=100;
 				$languages = '(Rating: '.$numretig .' out of 5)';
 				$viewss = ' views';
 			}
-    	$tmpl_text = '<div class="card__rating rating"><div class="star-rating"><span style="width: '. $numra.'%;"></span></div><span class="star-rating--after">
+    	$tmpl_text = '<div class="card__ratingz ratingz"><div class="star-ratingz"><span style="width: '. $numra.'%;"></span></div><span class="star-ratingz--after">
     	'.$languages.'</span></div><p style="font-size: 17px;margin-top: 5px;
     	font-style: italic;">'.get_post_meta ($post->ID,'views',true).$viewss.'</p>';
     	$tmpl_text = preg_replace('/(<h1.+?>)/iu','$1'.$tmpl_text.'', $text, 1); 
 		if ('' == $this->options['goto_setup_link']) $goto_setup_link = 'goto';
 		else $goto_setup_link = $this->options['goto_setup_link'];
 	    $content_title = apply_filters( 'single_post_title', $post->post_title, $post);
-	    $current_category = single_cat_title('', false);
+	   // $current_category = single_cat_title('', false);
+	    $term = get_queried_object()->name;
+		$current_category = apply_filters( 'single_term_title', $term );
 	    if (get_post_type($post->ID) == 'post') {
 	        if (in_category($current_category)) {
+	        //if (in_category( )) {
 	            return $text;
 	        } elseif (in_category('News')) {
 	        		if (!empty($this->options['extposts_vuvod_reting']) ) {
 	        			$text = $tmpl_text;
-	        			return  $text;
+	        		return  $text;
 	        		} else {
 	           	return  $text;}
 	        } else {	 
@@ -771,387 +793,153 @@ $length_two=100;
 
 	function add_link_to_content_css() {
 
-echo "<script>
+echo '<style>
+.class_imf img {
+    left: 21%!important;
+    top: 5%!important;
+}
+.loop-container {
+    display: block;
+    overflow: hidden;
+}
+.clearfix, .cf {
+    zoom: 1;
+}
+
+   
+
+.clearfix:before, .clearfix:after, .cf:before, .comment-respond:before, .cf:after, .comment-respond:after {
+    content: "";
+    display: table;
+}
+.casino-box {
+	 width: 22.4%;
+    display: block;
+    float: left;
+        position: relative;
+    margin-right: 2%;
+    margin-bottom: 1em;
+    padding: 5px;
+    background: #7ea6e3;
+}
+.casino-box .thumbnail {
+    margin-bottom: 0px;
+}
+.thumbnail {
+    font-size: 0;
+    text-align: center;
+}
+.thumbnail {
+    display: block;
+    padding: 4px;
+    margin-bottom: 20px;
+    line-height: 1.42857143;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    -webkit-transition: all .2s ease-in-out;
+    -o-transition: all .2s ease-in-out;
+    transition: all .2s ease-in-out;
+}
+.thumbnail>img, .thumbnail a>img {
+    margin-left: auto;
+    margin-right: auto;
+}
+.img-responsive, .thumbnail>img, .thumbnail a>img, .carousel-inner>.item>img, .carousel-inner>.item>a>img {
+    display: block;
+    width: 100% \9;
+    max-width: 100%;
+    height: auto;
+}
+.thumbnail img {
+    width: 100%;
+    height: auto;
+    border-radius: 5px;
+}
+.casino-box img, .game-box img {
+    width: 100%;
+    height: auto;
+}
+@media only screen and (min-width: 480px)
+.home .button {
+    width: 100%;
+    text-align: center;
+}
+@media only screen and (min-width: 320px)
+.casino-box .button {
+    font-size: .625em;
+}
+@media only screen and (min-width: 480px)
+.home .btn-orange {
+    font-size: 15px;
+    width: 100%;
+}
+.gbox, .nbox, .btn-orange, .btn-grey, .casino-box, .game-box {
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+ .btn-orange {
+    position: absolute;
+    bottom: 11px;
+    line-height: 1;
+    left: 10px;
+    padding-top: 3px;
+    padding-bottom: 1px;
+    background: #f6b848;
+    background: -moz-linear-gradient(top,#f6b848 0,#f5b134 100%);
+    background: -webkit-gradient(linear,left top,left bottom,color-stop(0%,#f6b848),color-stop(100%,#f5b134));
+    background: -webkit-linear-gradient(top,#f6b848 0,#f5b134 100%);
+    background: -o-linear-gradient(top,#f6b848 0,#f5b134 100%);
+    background: -ms-linear-gradient(top,#f6b848 0,#f5b134 100%);
+    background: linear-gradient(to bottom,#f6b848 0,#f5b134 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#f6b848",endColorstr="#f5b134",GradientType=0);
+    -webkit-box-shadow: 0 2px 0 0 rgba(164,119,31,1);
+    -moz-box-shadow: 0 2px 0 0 rgba(164,119,31,1);
+    box-shadow: 0 2px 0 0 rgba(164,119,31,1);
+    width: 89%;
+    text-shadow: 0 0 3px #3a2601;
+    border: 1px solid #c08716;
+}
+button, input[type="button"], input[type="reset"], input[type="submit"] {
+    border: none;
+    background: #fa5742;
+}
+
+
+
+
+
+
+
+
+
+
+
+.games-list__item{vertical-align:top;display:inline-block;margin-bottom:1px;margin-left:1px;list-style-type:none}.games-list{margin:0;padding:0;font-size:0}.game-box{position:relative}.game-box:hover .game-box__action-content{display:block}.slick-loading .slick-track{visibility:hidden}.slick-slide.slick-loading img{display:none}.slick-loading .slick-slide{visibility:hidden}.game-box__img-holder{display:block}.game-box__action-content{display:none;overflow:hidden;position:absolute;top:0;right:0;bottom:0;left:0;text-align:center;white-space:nowrap;font-size:0;background-color:hsla(0,0%,100%,.89)}.game-box__action-content:before{content:"";vertical-align:middle;display:inline-block;height:100%}.game-box__align-content{vertical-align:middle;display:inline-block;white-space:normal}.game-box__title{font-family:helveticaneuecyr-thin,Arial,sans-serif;font-size:20px;line-height:1.25;color:#020021;overflow:hidden;max-height:50px;margin:5px 20px 20px;font-weight:400;letter-spacing:.25px}.game-box__holder{margin:0}.button_style_success{background-color:#03a528;border-color:#03a528;color:#fff;display:block;height:30px;margin:0 15px}.button_style_success:hover{border-color:#03a528;background-color:#0FD53D;color:#fff}.button_style_success1{background-color:#03a528;border-color:#03a528;color:#fff}.button_style_success1:hover{border-color:#03a528;background-color:#00B72A;color:green}.button_size_m{border-width:3px;border-radius:22px}.button_size_m:before{height:39px}.button_size_m .button__text{margin-right:47px;margin-left:47px;margin-top:-1px;font-size:15px}.button_style_system{background-color:#202021;border-color:#0083c3;color:#0083c3}.button_style_system:hover{border-color:#0083c3;background-color:#0083c3;color:#fff}.button_size_s{font-family:Arial,Tahoma,sans-serif;border-radius:9pt}.button_size_s:before{height:22px}.button_size_s .button__text{font-size:11px;text-transform:uppercase}.button_size_l{border-width:3px;border-radius:30px}.button_size_l:before{height:53px}.button_size_l .button__text{margin-right:67px;margin-left:67px;font-size:1pc}.button_size_xl{border-width:3px;border-radius:35px}.button_size_xl:before{height:61px}.button_size_xl .button__text{margin-right:77px;margin-left:77px;font-size:18px}.button_size_xxl{border-width:3px;border-radius:45px}.button_size_xxl:before{height:78px}.button_size_xxl .button__text{margin-right:105px;margin-left:105px;font-size:25px}.button_type_full-width{display:block;width:100%}.button_type_full-width .button__text{margin:0}.button__text{vertical-align:middle;display:inline-block;margin-right:20px;margin-left:20px;font-size:13px;line-height:1.25;white-space:normal}.game-box_size_s .game-box__demo-holder,.game-box_size_s .game-box__title{display:none}.game-box__demo-holder{margin:20px 20px 5px}.game-box__pseudo-link{font-family:Arial,Tahoma,sans-serif;font-size:9pt;line-height:1;color:#020021;display:inline-block;border-bottom:1px dotted;text-transform:uppercase;text-decoration:none;cursor:pointer}.game-box__pseudo-link:hover{color:#0083c3}.game-box__img-holder img{height:145px;width:184px}
+
+
+
+
+
+
+
+
+
+
+
+
 	
-	
-	
+ul.card_list_group{margin:0}li.card-list__item{width:31%;margin-bottom:30px;border:1px solid #cacaca;height:350px;display:inline-block;margin-left:5px;margin-right:5px;vertical-align:top;border-radius:11px}.card_font{height:100%;box-shadow:0 1px 2px 0 rgba(0,0,0,.3);border-radius:4px}.card_back{background:red;top:0;left:0;backface-visibility:visible}.card_1{height:50%;position:relative;border-top-left-radius:11px;border-top-right-radius:11px}.card_2{height:50%;border-bottom-left-radius:11px;border-bottom-right-radius:11px;background-color:#fff}.ahrefahref{position:relative}.fa-info-circle:before{content:"\f05a";vertical-align:text-top;margin-left:170px;font-size:27px;color:rgba(64,64,64,0.56);position:absolute;top:-5px;left:11px}.card__ratingq{margin-top:15px;text-align:center}.starq-ratingq{height:12.5px;position:relative;margin-right:7px;width:156px;display:inline-block}.starq-ratingq:before{background-image:url(http://casinoyour.bid/wp-content/themes/colorist/img/stars-empty.svg)!important}.starq-ratingq:before,.starq-ratingq>span{width:156px;display:block;height:14px;position:absolute}.starq-ratingq:before,.starq-ratingq>span:before{top:0;background-repeat:repeat-x;background-size:cover;left:0;right:0;content:"";bottom:0}.starq_ratingq_afte{font-size:15px;padding-left:11px}.starq-ratingq>span{text-indent:-10000px;overflow:hidden}.starq-ratingq:before,.starq-ratingq>span{width:156px;display:block;height:14px;position:absolute}.starq-ratingq>span:before{background-image:url(http://casinoyour.bid/wp-content/themes/colorist/img/stars-full.svg)!important;display:block;height:14px;position:absolute;text-indent:10000px}.starq_ratingq_after{font-size:14px;padding-left:5px}.text_container{color:rgba(56,56,56,0.46);padding-top:25px;padding-left:20px}.text_container h5{color:rgba(56,56,56,0.71)}.card_status_card_status_with_action{display:inline-block}.abzac_gertified{color:#ff5d5d;font-weight:bolder;margin-left:0;width:100%}*,:after,:before{box-sizing:inherit}body{margin:0;background-color:#f1f1f1;color:#26292D;font-family:ProximaNova,Helvetica,Arial,sans-serif;font-size:16px;line-height:30px}html{box-sizing:border-box}.btn,.write__textarea--editable button{border-radius:4px;height:45px;line-height:51px;font-size:12px;letter-spacing:.15em;font-weight:700;display:inline-block;text-transform:uppercase;border:none}.btn--cta{background:#2396F7;text-align:center}.btn--cta:hover{background-color:#65b6fa;color:#f8f8f8}.card-list{margin:0 -15px}.card__back,.card__front{transition:transform .6s cubic-bezier(.39,.2,.37,1.44)}.card-list__item{float:left;width:20%;min-height:50px;perspective:687px}.card-list__item.filter{opacity:.1}.card,.card__back{border-radius:11px;width:100%}.card{background:0 0;position:relative}.card__front{overflow:hidden;box-shadow:0 1px 2px 0 rgba(0,0,0,.3);border-radius:11px;backface-visibility:hidden;-webkit-backface-visibility:hidden;transform:rotateY(0);position:relative;z-index:2}.card__back{background:#fff;box-shadow:none;backface-visibility:hidden;-webkit-backface-visibility:hidden;transform:rotateY(-180deg);position:absolute;left:0;top:0;height:100%;padding:63px 18px 18px;z-index:1}.card--show-back .card__front{transform:rotateY(180deg);z-index:1;box-shadow:none}.card--show-back .card__back{transform:rotateY(0);z-index:2;box-shadow:0 1px 2px 0 rgba(0,0,0,.3)}.card__close-info,.card__open-info{position:absolute;top:20px;right:20px;opacity:.3;cursor:pointer;background-color:#f8f8f8;border-radius:24px;height:24px;transition:.1s}.card__close-info:hover,.card__open-info:hover{opacity:1;transition:.1s}.card__media{display:block;height:180px;background:#f8f8f8;box-shadow:0 1px 0 #dddee1;padding-top:45px;text-align:center;border-radius:11px 11px 0 0;overflow:hidden;color:#26292D}.card__media img{border-radius:50%}.card__media--rating{padding-top:30px;color:#26292D}.card__desc{padding:1px 18px 0;height:170px;background:#fff}.card__desc-title{font-size:16px;line-height:1.5;margin-top:11px;color:#3C3C3C;margin-bottom:4px;word-break:break-word}.card__desc-body{font-size:14px;line-height:1.64;color:#888;word-break:break-word}.card__action,.card__status{font-size:12px;text-transform:uppercase;letter-spacing:.05em}.card__status{position:absolute;left:20px;color:#3C3C3C;text-overflow:ellipsis;white-space:nowrap;max-width:83%;overflow:hidden;padding-bottom:0;bottom:7px}.card__action,.card__desc-btn{bottom:20px;position:absolute}.card__status.card__status--mobile{display:none}.card__status--with-action{color:#2396f7;max-width:60%}.card__action{right:20px;color:#26292D;transition:.1s}.card__action:hover{opacity:.4;transition:.1s}.card__rating.rating--mobile{display:none}.card__desc-btn{left:20px;right:20px}.rating{font-size:14px}.star-rating{height:14px;position:relative;width:156px}.star-rating--after{padding-left:7px;position:relative;font-size:14px;top:-1px}.star-rating:before,.star-rating>span:before{top:0;background-repeat:repeat-x;background-size:cover;left:0;right:0;content:"";bottom:0}.star-rating--mobile-value{display:none}.star-rating--mobile>span:before{background-repeat:repeat-x;background-size:cover;display:inline-block;content:"";height:13px;width:13px}.star-rating:before,.star-rating>span{width:156px;display:block;height:14px;position:absolute}.star-rating:before{background-image:url(http://casinoyour.bid/wp-content/themes/colorist/img/stars-empty.svg)!important}.star-rating>span{text-indent:-10000px;overflow:hidden}.star-rating>span:before{background-image:url(http://casinoyour.bid/wp-content/themes/colorist/img/stars-full.svg)!important;display:block;height:14px;position:absolute;text-indent:10000px}.fa-toggle-on:before{content:"\f205";font-size:20px}.fa-toggle-off:before{content:"\f204";font-size:20px}
 
 	
 
-</script>";
+</style>';
 
 
 
 echo '<style>
 
-ul.card_list_group {
-    margin: 0;
-}
-li.card-list__item {
-    width: 31%;
-    margin-bottom: 30px;
-    border: 1px solid #cacaca;
-    height: 350px;
-    display: inline-block;
-    margin-left: 5px;
-    margin-right: 5px;
-    vertical-align: top;
-    border-radius: 11px;
-}   
-.card_font {
-    height: 100%;
-    box-shadow: 0 1px 2px 0 rgba(0,0,0,.3);
-    border-radius: 4px;
-}
-.card_back {
-        background: red;
-         top:0;
-         left:0;
-         backface-visibility: visible;
-}
-.card_1 {
-    height: 50%;
-    rgba(236, 236, 236, 0.39);
-    position: relative;
-    border-top-left-radius: 11px;
-    border-top-right-radius: 11px;
-}
-.card_2 {
-    height: 50%;
-    border-bottom-left-radius: 11px;
-    border-bottom-right-radius: 11px;
-    background-color: #fff;
-}
-.ahrefahref {
-    position: relative;
-}
-.fa-info-circle:before {
-    content: "\f05a";
-    vertical-align:text-top;
-    margin-left: 170px;
-    font-size: 27px;
-    color: rgba(64, 64, 64, 0.56);
-    position: absolute;
-    top: -5px;
-    left: 11px;
-}
-.card__ratingq {
-    margin-top: 15px;
-    text-align: center;
-}
-.starq-ratingq {
-    height: 12.5px;
-    position: relative;
-    margin-right: 7px;
-    width: 156px;
-    display: inline-block;
-}
-.starq-ratingq:before {
-    background-image: url(http://casinoyour.bid/wp-content/themes/colorist/img/stars-empty.svg)!important;
-}
-.starq-ratingq:before, .starq-ratingq>span {
-    width: 156px;
-    display: block;
-    height: 14px;
-    position: absolute;
-}
-.starq-ratingq:before, .starq-ratingq>span:before {
-    top: 0;
-    background-repeat: repeat-x;
-    background-size: cover;
-    left: 0;
-    right: 0;
-    content: "";
-    bottom: 0;
-}
-.starq_ratingq_afte {
-    font-size: 15px;
-    padding-left: 11px;
-}
-.starq-ratingq>span {
-    text-indent: -10000px;
-    overflow: hidden;
-}
-.starq-ratingq:before, .starq-ratingq>span {
-    width: 156px;
-    display: block;
-    height: 14px;
-    position: absolute;
-}
-.starq-ratingq>span:before {
-    background-image: url(http://casinoyour.bid/wp-content/themes/colorist/img/stars-full.svg)!important;
-    display: block;
-    height: 14px;
-    position: absolute;
-    text-indent: 10000px;
-}
-.starq_ratingq_after {
-    font-size: 14px;
-    padding-left: 5px;
-}
-.text_container {
-    color: rgba(56, 56, 56, 0.46);
-    padding-top: 25px;
-    padding-left: 20px;
-}    
-.text_container h5  {
-    color: rgba(56, 56, 56, 0.71);
-}
-.card_status_card_status_with_action {
-    display: inline-block;
-}
-.abzac_gertified  {
-    color: rgb(255, 93, 93);
-    font-weight: bolder;
-    margin-left: 0;
-    width: 100%;
-}
-*,:after,:before {
-    box-sizing: inherit
-}
-body {
-    margin: 0;
-    background-color: #f1f1f1;
-    color: #26292D;
-    font-family: ProximaNova,Helvetica,Arial,sans-serif;
-    font-size: 16px;
-    line-height: 30px;
-}
-html {
-    box-sizing: border-box;
-}
-.btn,.write__textarea--editable button {
-    border-radius: 4px;
-    height: 45px;
-    line-height: 51px;
-    font-size: 12px;
-    letter-spacing: .15em;
-    font-weight: 700;
-    display: inline-block;
-    text-transform: uppercase;
-    border: none
-}
-.btn--cta {
-    background: #2396F7;
-    text-align: center
-}
-.btn--cta:hover {
-    background-color: #65b6fa;
-    color: #f8f8f8
-}
-.card-list {
-    margin: 0 -15px
-}
-.card__back,.card__front {
-    transition: transform .6s cubic-bezier(.39,.2,.37,1.44)
-}
-.card-list__item {
-    float: left;
-    width: 20%;
-    min-height: 50px;
-    perspective: 687px
-}
-.card-list__item.filter {
-    opacity: .1
-}
-.card,.card__back {
-    border-radius: 11px;
-    width: 100%
-}
-.card {
-    background: 0 0;
-    position: relative
-}
-.card__front {
-    overflow: hidden;
-    box-shadow: 0 1px 2px 0 rgba(0,0,0,.3);
-    border-radius: 11px;
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
-    transform: rotateY(0);
-    position: relative;
-    z-index: 2
-}
-.card__back {
-    background: #fff;
-    box-shadow: none;
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
-    transform: rotateY(-180deg);
-    position: absolute;
-    left: 0;
-    top: 0;
-    height: 100%;
-    padding: 63px 18px 18px;
-    z-index: 1
-}
-.card--show-back .card__front {
-    transform: rotateY(180deg);
-    z-index: 1;
-    box-shadow: none
-}
-.card--show-back .card__back {
-    transform: rotateY(0);
-    z-index: 2;
-    box-shadow: 0 1px 2px 0 rgba(0,0,0,.3)
-}
-.card__close-info,.card__open-info {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    opacity: .3;
-    cursor: pointer;
-    background-color: #f8f8f8;
-    border-radius: 24px;
-    height: 24px;
-    transition: .1s
-}
-.card__close-info:hover,.card__open-info:hover {
-    opacity: 1;
-    transition: .1s
-}
-.card__media {
-    display: block;
-    height: 180px;
-    background: #f8f8f8;
-    box-shadow: 0 1px 0 #dddee1;
-    padding-top: 45px;
-    text-align: center;
-    border-radius: 11px 11px 0 0;
-    overflow: hidden;
-    color: #26292D
-}
-.card__media img {
-    border-radius: 50%
-}
-.card__media--rating {
-    padding-top: 30px;
-    color: #26292D
-}
-.card__desc {
-    padding: 0 18px 0 18px;
-    height: 170px;
-    background: #fff
-}
-.card__desc-title {
-    font-size: 16px;
-    line-height: 1.5;
-    margin-top: 11px;
-    color: #3C3C3C;
-    margin-bottom: 4px;
-    word-break: break-word
-}
-.card__desc-body {
-    font-size: 14px;
-    line-height: 1.64;
-    color: #888;
-    word-break: break-word
-}
-.card__action,.card__status {
-    font-size: 12px;
-    text-transform: uppercase;
-    letter-spacing: .05em
-}
-.card__status {
-    position: absolute;
-    left: 20px;
-    color: #3C3C3C;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    max-width: 83%;
-    overflow: hidden;
-    padding-bottom: 0px;
-    bottom: 7px
-}
-.card__action,.card__desc-btn {
-    bottom: 20px;
-    position: absolute
-}
-.card__status.card__status--mobile {
-    display: none
-}
-.card__status--with-action {
-        color: #2396f7;
-    max-width: 60%
-}
-.card__action {
-    right: 20px;
-    color: #26292D;
-    transition: .1s
-}
-.card__action:hover {
-    opacity: .4;
-    transition: .1s
-}
-.card__rating.rating--mobile {
-    display: none
-}
-.card__desc-btn {
-    left: 20px;
-    right: 20px
-}
-.rating {
-    font-size: 14px
-}
-.star-rating {
-    height: 14px;
-    position: relative;
-    width: 156px
-}
-.star-rating--after {
-    padding-left: 7px;
-    position: relative;
-    font-size: 14px;
-    top: -1px
-}
-.star-rating:before,.star-rating>span:before {
-    top: 0;
-    background-repeat: repeat-x;
-    background-size: cover;
-    left: 0;
-    right: 0;
-    content: "";
-    bottom: 0
-}
-.star-rating--mobile-value {
-    display: none
-}
-.star-rating--mobile>span:before {
-    background-repeat: repeat-x;
-    background-size: cover;
-    display: inline-block;
-    content: "";
-    height: 13px;
-    width: 13px
-}
-.star-rating:before,.star-rating>span {
-    width: 156px;
-    display: block;
-    height: 14px;
-    position: absolute
-}
-.star-rating:before {
-    background-image: url(http://casinoyour.bid/wp-content/themes/colorist/img/stars-empty.svg)!important
-}
-.star-rating>span {
-    text-indent: -10000px;
-    overflow: hidden
-}
-.star-rating>span:before {
-    background-image: url(http://casinoyour.bid/wp-content/themes/colorist/img/stars-full.svg)!important;
-    display: block;
-    height: 14px;
-    position: absolute;
-    text-indent: 10000px
-}
-.fa-toggle-on:before {
-    content: "\f205";
-    font-size: 20px;
-}
-.fa-toggle-off:before {
-    content: "\f204";
-    font-size: 20px;
-}
 
 
 
@@ -1174,10 +962,7 @@ html {
 
 
 
-
-
-
-.star-rating{height:12.5px;position:relative;width:110px;display:inline-block}.star-rating:before{background-image:url(http://webitcoinslotsgambling.xyz/wp-content/uploads/primer_2-01.svg)!important}.star-rating:before,.star-rating>span{width:110px;display:block;height:20px;position:absolute}.star-rating:before,.star-rating>span:before{top:0;background-repeat:repeat-x;background-size:cover;left:0;right:0;content:"";bottom:0}.star_rating_afte{font-size:15px;padding-left:11px}.star-rating>span{text-indent:-10000px;overflow:hidden}.star-rating:before,.star-rating>span{width:110px;display:block;height:20px;position:absolute}.star-rating>span:before{background-image:url(http://webitcoinslotsgambling.xyz/wp-content/uploads/primer_1-01.svg)!important;display:block;height:20px;position:absolute;text-indent:10000px;width:114px}.star_rating_after{font-size:14px;padding-left:5px}.card__rating{margin-top:15px}.star-rating--after{position:relative;font-size:15px;font-style:italic;top:3px}.static{with:100%}.ben_1,.ben_2,.ben_3{width:31%;height:171px;margin:5px;display:inline-block;position:relative;box-shadow:0 3px 20px rgba(0,0,0,.25),inset 0 2px 0 rgba(255,255,255,.6),0 2px 0 rgba(0,0,0,.1),inset 0 0 20px rgba(0,0,0,.1)}.ben_1:hover,.ben_2:hover,.ben_3:hover{box-shadow:inset 0 0 20px rgba(0,0,0,.2),0 2px 0 rgba(255,255,255,.4),0 2px 0 rgba(0,0,0,.1);-moz-box-shadow:inset 0 0 20px rgba(0,0,0,.2),0 2px 0 rgba(255,255,255,.4),0 2px 0 rgba(0,0,0,.1);-webkit-box-shadow:inset 0 0 20px rgba(0,0,0,.2),0 2px 0 rgba(255,255,255,.4),0 2px 0 rgba(0,0,0,.1);-o-box-shadow:inset 0 0 20px rgba(0,0,0,.2),0 2px 0 rgba(255,255,255,.4),0 2px 0 rgba(0,0,0,.1);-ms-box-shadow:inset 0 0 20px rgba(0,0,0,.2),0 2px 0 rgba(255,255,255,.4),0 2px 0 rgba(0,0,0,.1)}.ben_1 img,.ben_2 img,.ben_3 img{position:absolute;left:15%;top:-7%;border-radius:15px}.ben_1:before,.ben_2:before,.ben_3:before{content:"";position:absolute;width:100%;height:100%}.button_k{height:35px;width:100%;background-color:rgba(191,191,191,0.22);position:absolute;bottom:0;color:#000;font-weight:700}.fa-chevron-right:before{content:"\f054";color:#ff9e00;margin-left:10px;font-size:19px}.ben_2:before{background:rgba(230,230,230,0.48)}.ben_1:before{background:rgba(230,230,230,0.48)}.ben_3:before{background:rgba(230,230,230,0.48)}@media screen and (max-width: 960px){.ben_1 img,.ben_2 img,.ben_3 img{left:8%}}@media screen and (max-width: 620px){.ben_1 img,.ben_2 img,.ben_3 img{left:3%}center{line-height:1}thumbnail.wp-post-image{width:130px;height:130px}.mrg-slot-card-img.lazy{height:188px}.myh1{font-size:14px}.mrg-slot-play-btn a{font-size:21px!important;height:32px;padding-top:1px}}@media screen and (max-width: 520px){.ben_1,.ben_2,.ben_3{width:60%}.attachment-thumbnail.size-thumbnail.wp-post-image{max-width:160px;max-height:160px}.ben_1 img,.ben_2 img,.ben_3 img{left:17%}center{line-height:2;font-size:18px}.mrg-slots-cards{width:45%!important}}@media screen and (max-width: 420px){.attachment-thumbnail.size-thumbnail.wp-post-image{max-width:80%;max-height:80%}.ben_1 img,.ben_2 img,.ben_3 img{left:3%}}@media screen and (max-width: 400px){center{line-height:1}.ben_1 img,.ben_2 img,.ben_3 img{left:7%;top:1px}.mrg-slots-cards{width:70%!important}}@media screen and (max-width: 300px){.ben_1,.ben_2,.ben_3{width:90%}.ben_1 img,.ben_2 img,.ben_3 img{left:10%}.mrg-slots-cards{width:95%!important}h2,.h2{font-size:23px}}.mrg-slots-cards .mrg-slot-info{padding:3px;background:#000;padding:3px;position:absolute;display:block;bottom:0;width:100%}.mrg-slots-cards{width:31%;display:inline-block;margin:5px 5px 15px}.mrg-slot-card-img.lazy{background-color:#000;position:relative;height:220px}.pabz{text-align:center;margin:0;padding:5px 0}.myh1{font-size:17px;margin-top:7px;text-align:center;text-transform:capitalize;font-weight:600}.mrg-slot-play-btn a{display:block;width:100%;height:45px;padding-top:5px;line-height:34px;font-weight:700;text-align:center;background:#ffc01a;text-transform:uppercase;font-size:29px!important;color:#1a1a1a!important;transform-style:preserve-3d;border-bottom-left-radius:5px;border-bottom-right-radius:5px}.mrg-slot-play-btn a:hover{color:#FDFDFD!important;background:#0381E9}.attachment-thumbnail.size-thumbnail.wp-post-image{width:150px;height:150px}</style>';
+.star-ratingz{height:12.5px;position:relative;width:110px;display:inline-block}.star-ratingz:before{background-image:url(http://webitcoinslotsgambling.xyz/wp-content/uploads/primer_2-01.svg)!important}.star-ratingz:before,.star-ratingz>span{width:110px;display:block;height:20px;position:absolute}.star-ratingz:before,.star-ratingz>span:before{top:0;background-repeat:repeat-x;background-size:cover;left:0;right:0;content:"";bottom:0}.star_rating_afte{font-size:15px;padding-left:11px}.star-ratingz>span{text-indent:-10000px;overflow:hidden}.star-ratingz:before,.star-ratingz>span{width:110px;display:block;height:20px;position:absolute}.star-ratingz>span:before{background-image:url(http://webitcoinslotsgambling.xyz/wp-content/uploads/primer_1-01.svg)!important;display:block;height:20px;position:absolute;text-indent:10000px;width:114px}.star_rating_after{font-size:14px;padding-left:5px}.card__ratingz{margin-top:15px}.star-ratingz--after{position:relative;font-size:15px;font-style:italic;top:3px}.static{with:100%}.ben_1,.ben_2,.ben_3{width:31%;height:171px;margin:5px;display:inline-block;position:relative;box-shadow:0 3px 20px rgba(0,0,0,.25),inset 0 2px 0 rgba(255,255,255,.6),0 2px 0 rgba(0,0,0,.1),inset 0 0 20px rgba(0,0,0,.1)}.ben_1:hover,.ben_2:hover,.ben_3:hover{box-shadow:inset 0 0 20px rgba(0,0,0,.2),0 2px 0 rgba(255,255,255,.4),0 2px 0 rgba(0,0,0,.1);-moz-box-shadow:inset 0 0 20px rgba(0,0,0,.2),0 2px 0 rgba(255,255,255,.4),0 2px 0 rgba(0,0,0,.1);-webkit-box-shadow:inset 0 0 20px rgba(0,0,0,.2),0 2px 0 rgba(255,255,255,.4),0 2px 0 rgba(0,0,0,.1);-o-box-shadow:inset 0 0 20px rgba(0,0,0,.2),0 2px 0 rgba(255,255,255,.4),0 2px 0 rgba(0,0,0,.1);-ms-box-shadow:inset 0 0 20px rgba(0,0,0,.2),0 2px 0 rgba(255,255,255,.4),0 2px 0 rgba(0,0,0,.1)}.ben_1 img,.ben_2 img,.ben_3 img{position:absolute;left:15%;top:-7%;border-radius:15px}.ben_1:before,.ben_2:before,.ben_3:before{content:"";position:absolute;width:100%;height:100%}.button_k{height:35px;width:100%;background-color:rgba(191,191,191,0.22);position:absolute;bottom:0;color:#000;font-weight:700}.fa-chevron-right:before{content:"\f054";color:#ff9e00;margin-left:10px;font-size:19px}.ben_2:before{background:rgba(230,230,230,0.48)}.ben_1:before{background:rgba(230,230,230,0.48)}.ben_3:before{background:rgba(230,230,230,0.48)}@media screen and (max-width: 960px){.ben_1 img,.ben_2 img,.ben_3 img{left:8%}}@media screen and (max-width: 620px){.ben_1 img,.ben_2 img,.ben_3 img{left:3%}center{line-height:1}thumbnail.wp-post-image{width:130px;height:130px}.mrg-slot-card-img.lazy{height:188px}.myh1{font-size:14px}.mrg-slot-play-btn a{font-size:21px!important;height:32px;padding-top:1px}}@media screen and (max-width: 520px){.ben_1,.ben_2,.ben_3{width:60%}.attachment-thumbnail.size-thumbnail.wp-post-image{max-width:160px;max-height:160px}.ben_1 img,.ben_2 img,.ben_3 img{left:17%}center{line-height:2;font-size:18px}.mrg-slots-cards{width:45%!important}}@media screen and (max-width: 420px){.attachment-thumbnail.size-thumbnail.wp-post-image{max-width:80%;max-height:80%}.ben_1 img,.ben_2 img,.ben_3 img{left:3%}}@media screen and (max-width: 400px){center{line-height:1}.ben_1 img,.ben_2 img,.ben_3 img{left:7%;top:1px}.mrg-slots-cards{width:70%!important}}@media screen and (max-width: 300px){.ben_1,.ben_2,.ben_3{width:90%}.ben_1 img,.ben_2 img,.ben_3 img{left:10%}.mrg-slots-cards{width:95%!important}h2,.h2{font-size:23px}}.mrg-slots-cards .mrg-slot-info{padding:3px;background:#000;padding:3px;position:absolute;display:block;bottom:0;width:100%}.mrg-slots-cards{width:31%;display:inline-block;margin:5px 5px 15px}.mrg-slot-card-img.lazy{background-color:#000;position:relative;height:220px}.pabz{text-align:center;margin:0;padding:5px 0}.myh1{font-size:17px;margin-top:7px;text-align:center;text-transform:capitalize;font-weight:600}.mrg-slot-play-btn a{display:block;width:100%;height:45px;padding-top:5px;line-height:34px;font-weight:700;text-align:center;background:#ffc01a;text-transform:uppercase;font-size:29px!important;color:#1a1a1a!important;transform-style:preserve-3d;border-bottom-left-radius:5px;border-bottom-right-radius:5px}.mrg-slot-play-btn a:hover{color:#FDFDFD!important;background:#0381E9}.attachment-thumbnail.size-thumbnail.wp-post-image{width:150px;height:150px}</style>';
 		echo '<style>.play-for{ -moz-box-shadow:0 10px 14px -7px #276873;-webkit-box-shadow:0 10px 14px -7px #276873;box-shadow:0 10px 14px -7px #276873;background:-webkit-gradient(linear,left top,left bottom,color-stop(.05,#599bb3),color-stop(1,#408c99));background:-moz-linear-gradient(top,#599bb3 5%,#408c99 100%);background:-webkit-linear-gradient(top,#599bb3 5%,#408c99 100%);background:-o-linear-gradient(top,#599bb3 5%,#408c99 100%);background:-ms-linear-gradient(top,#599bb3 5%,#408c99 100%);background:linear-gradient(to bottom,#599bb3 5%,#408c99 100%);filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=\'#599bb3\', endColorstr=\'#408c99\', GradientType=0);
 
 		    background-color:#599bb3;-moz-border-radius:8px;-webkit-border-radius:8px;border-radius:8px;display:inline-block;cursor:pointer;color:#fff;font-family:Arial;font-size:15px;font-weight:700;padding:13px 32px;text-decoration:none;text-shadow:0 1px 0 #3d768a}.play-for:hover{background:-webkit-gradient(linear,left top,left bottom,color-stop(.05,#408c99),color-stop(1,#599bb3));background:-moz-linear-gradient(top,#408c99 5%,#599bb3 100%);background:-webkit-linear-gradient(top,#408c99 5%,#599bb3 100%);background:-o-linear-gradient(top,#408c99 5%,#599bb3 100%);background:-ms-linear-gradient(top,#408c99 5%,#599bb3 100%);background:linear-gradient(to bottom,#408c99 5%,#599bb3 100%);filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=\'#408c99\', endColorstr=\'#599bb3\', GradientType=0);background-color:#408c99}.play-for:active{position:relative;top:1px}.grid figure,.grid li{position:relative;margin:0}.cs-style-3 figure,.cs-style-4 figure>div{overflow:hidden}.grid{padding:10px 20px 0;max-width:1300px;margin:0 auto;list-style:none;text-align:center}.grid li{display:inline-block;padding:20px;text-align:left}.grid figure img{max-width:100%;display:block;position:relative}.grid figcaption{position:absolute;top:0;left:0;padding:5px 0 0 15px;background:#2c3f52;color:#ed4e6e}.grid figcaption h3{margin:0;padding:0;color:#fff}.grid figcaption span:before{content:"by "}.grid figcaption a{text-align:center;padding:5px 10px;border-radius:2px;display:inline-block;background:#ed4e6e;color:#fff}.cs-style-1 figcaption{height:100%;width:100%;opacity:0;text-align:center;-webkit-backface-visibility:hidden;-moz-backface-visibility:hidden;backface-visibility:hidden;-webkit-transition:-webkit-transform .3s,opacity .3s;-moz-transition:-moz-transform .3s,opacity .3s;transition:transform .3s,opacity .3s}.cs-style-4 figcaption,.cs-style-5 figcaption{-webkit-backface-visibility:hidden;-moz-backface-visibility:hidden}.cs-style-1 figure.cs-hover figcaption,.no-touch .cs-style-1 figure:hover figcaption{opacity:1;-webkit-transform:translate(15px,15px);-moz-transform:translate(15px,15px);-ms-transform:translate(15px,15px);transform:translate(15px,15px)}.cs-style-1 figcaption h3{margin-top:70px}.cs-style-1 figcaption span{display:block}.cs-style-1 figcaption a{margin-top:30px}.cs-style-2 figure img{z-index:10;-webkit-transition:-webkit-transform .4s;-moz-transition:-moz-transform .4s;transition:transform .4s}.cs-style-2 figure.cs-hover img,.no-touch .cs-style-2 figure:hover img{-webkit-transform:translateY(-90px);-moz-transform:translateY(-90px);-ms-transform:translateY(-90px);transform:translateY(-90px)}.cs-style-2 figcaption{height:90px;width:100%;top:auto;bottom:0}.cs-style-2 figcaption a{position:absolute;right:20px;top:30px}.cs-style-3 figure img{-webkit-transition:-webkit-transform .4s;-moz-transition:-moz-transform .4s;transition:transform .4s}.cs-style-3 figure.cs-hover img,.no-touch .cs-style-3 figure:hover img{-webkit-transform:translateY(-50px);-moz-transform:translateY(-50px);-ms-transform:translateY(-50px);transform:translateY(-50px)}.cs-style-3 figcaption{height:100px;width:100%;top:auto;bottom:0;opacity:0;-webkit-transform:translateY(100%);-moz-transform:translateY(100%);-ms-transform:translateY(100%);transform:translateY(100%);-webkit-transition:-webkit-transform .4s,opacity .1s .3s;-moz-transition:-moz-transform .4s,opacity .1s .3s;transition:transform .4s,opacity .1s .3s}.cs-style-3 figcaption a,.cs-style-4 figcaption a,.cs-style-5 figure a,.cs-style-6 figcaption a,.cs-style-7 figcaption a{position:absolute;bottom:20px;right:20px}.cs-style-3 figure.cs-hover figcaption,.no-touch .cs-style-3 figure:hover figcaption{opacity:1;-webkit-transform:translateY(0);-moz-transform:translateY(0);-ms-transform:translateY(0);transform:translateY(0);-webkit-transition:-webkit-transform .4s,opacity .1s;-moz-transition:-moz-transform .4s,opacity .1s;transition:transform .4s,opacity .1s}.cs-style-4 li{-webkit-perspective:1700px;-moz-perspective:1700px;perspective:1700px;-webkit-perspective-origin:0 50%;-moz-perspective-origin:0 50%;perspective-origin:0 50%}.cs-style-4 figure{-webkit-transform-style:preserve-3d;-moz-transform-style:preserve-3d;transform-style:preserve-3d}.cs-style-4 figure img{-webkit-transition:-webkit-transform .4s;-moz-transition:-moz-transform .4s;transition:transform .4s}.cs-style-4 figure.cs-hover img,.no-touch .cs-style-4 figure:hover img{-webkit-transform:translateX(25%);-moz-transform:translateX(25%);-ms-transform:translateX(25%);transform:translateX(25%)}.cs-style-4 figcaption{height:100%;width:50%;opacity:0;backface-visibility:hidden;-webkit-transform-origin:0 0;-moz-transform-origin:0 0;transform-origin:0 0;-webkit-transform:rotateY(-90deg);-moz-transform:rotateY(-90deg);transform:rotateY(-90deg);-webkit-transition:-webkit-transform .4s,opacity .1s .3s;-moz-transition:-moz-transform .4s,opacity .1s .3s;transition:transform .4s,opacity .1s .3s}.cs-style-5 figcaption,.cs-style-6 figcaption,.cs-style-7 figcaption{height:100%;width:100%}.cs-style-4 figure.cs-hover figcaption,.no-touch .cs-style-4 figure:hover figcaption{opacity:1;-webkit-transform:rotateY(0);-moz-transform:rotateY(0);transform:rotateY(0);-webkit-transition:-webkit-transform .4s,opacity .1s;-moz-transition:-moz-transform .4s,opacity .1s;transition:transform .4s,opacity .1s}.cs-style-5 figure img{z-index:10;-webkit-transition:-webkit-transform .4s;-moz-transition:-moz-transform .4s;transition:transform .4s}.cs-style-5 figure.cs-hover img,.no-touch .cs-style-5 figure:hover img{-webkit-transform:scale(.4);-moz-transform:scale(.4);-ms-transform:scale(.4);transform:scale(.4)}.cs-style-5 figcaption{opacity:0;-webkit-transform:scale(.7);-moz-transform:scale(.7);-ms-transform:scale(.7);transform:scale(.7);backface-visibility:hidden;-webkit-transition:-webkit-transform .4s,opacity .4s;-moz-transition:-moz-transform .4s,opacity .4s;transition:transform .4s,opacity .4s}.cs-style-5 figure.cs-hover figcaption,.no-touch .cs-style-5 figure:hover figcaption{-webkit-transform:scale(1);-moz-transform:scale(1);-ms-transform:scale(1);transform:scale(1);opacity:1}.cs-style-6 figure img{z-index:10;-webkit-transition:-webkit-transform .4s;-moz-transition:-moz-transform .4s;transition:transform .4s}.cs-style-6 figure.cs-hover img,.no-touch .cs-style-6 figure:hover img{-webkit-transform:translateY(-50px) scale(.5);-moz-transform:translateY(-50px) scale(.5);-ms-transform:translateY(-50px) scale(.5);transform:translateY(-50px) scale(.5)}.cs-style-6 figcaption h3{margin-top:60%}.cs-style-7 li:first-child{z-index:6}.cs-style-7 li:nth-child(2){z-index:5}.cs-style-7 li:nth-child(3){z-index:4}.cs-style-7 li:nth-child(4){z-index:3}.cs-style-7 li:nth-child(5){z-index:2}.cs-style-7 li:nth-child(6){z-index:1}.cs-style-7 figure img{z-index:10}.cs-style-7 figcaption{opacity:0;-webkit-backface-visibility:hidden;-moz-backface-visibility:hidden;backface-visibility:hidden;-webkit-transition:opacity .3s,height .3s,box-shadow .3s;-moz-transition:opacity .3s,height .3s,box-shadow .3s;transition:opacity .3s,height .3s,box-shadow .3s;box-shadow:0 0 0 0 #2c3f52}.cs-style-7 figure.cs-hover figcaption,.no-touch .cs-style-7 figure:hover figcaption{opacity:1;height:130%;box-shadow:0 0 0 10px #2c3f52}.cs-style-7 figcaption h3{margin-top:86%}.cs-style-7 figcaption a,.cs-style-7 figcaption h3,.cs-style-7 figcaption span{opacity:0;-webkit-transition:opacity 0s;-moz-transition:opacity 0s;transition:opacity 0s}.cs-style-7 figure.cs-hover figcaption a,.cs-style-7 figure.cs-hover figcaption h3,.cs-style-7 figure.cs-hover figcaption span,.no-touch .cs-style-7 figure:hover figcaption a,.no-touch .cs-style-7 figure:hover figcaption h3,.no-touch .cs-style-7 figure:hover figcaption span{-webkit-transition:opacity .3s .2s;-moz-transition:opacity .3s .2s;transition:opacity .3s .2s;opacity:1}@media screen and (max-width:31.5em){.grid{padding:5px 10px 0}.grid li{width:100%;min-width:300px}}</style>';

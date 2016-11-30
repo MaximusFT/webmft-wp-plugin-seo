@@ -491,10 +491,10 @@ class WebMFT_SEO_Admin extends WebMFT_SEO {
                        <div class="col-md-5">
                             <h4>Выбор цвета для кнопки</h4>
                                 <div class="form-group">
-                                <label for="goto_dasdasd">goto_dasdasd</label>
+                                <label for="goto_dasdasd">goto_dasdasd: <?php echo $this->options['goto_dasdasd'];?> </label>
                                 <?php $this->display_input_text('goto_dasdasd', 'color') ?>
                             </div>
-                            <a href="#" class="myButton">green</a>
+                            <a href="#" class="myButton" style="background-color:<?php echo $this->options['goto_dasdasd'];?>;">green</a>
                        </div>
                     </div>
                 </div>
@@ -506,28 +506,110 @@ class WebMFT_SEO_Admin extends WebMFT_SEO {
 
                 <div id="extidpost" class="wp-webmft-tab js-tab-item">
                     <div class="row">
-                       <div class="col-md-10">
-                            <h4>Вывод постов по айди</h4>
+                        <div class="col-md-10">
+                            <h2>Вывод постов по ID</h2>
                             <div class="form-group">
                                 <label for="extposts_ids_posts">
-                                <?php $this->display_checkbox('extposts_ids_posts') ?>
-                                Вывод блока
+                                    <?php $this->display_checkbox('extposts_ids_posts') ?>
+                                    Активировать вывод блоков
                                 </label>
                             </div>
-                             <div class="form-group">
+                        </div>    
+                        <div class="col-md-3">
+                            <img  src="http://best7casino.us/wp-content/uploads/2016/11/one_block.jpg" class="img_one_admin_block">
+                        </div>
+                        <div class="col-md-3" style="top: 100px;">    
+                           <div class="form-group">
                                 <label for="extposts_ids_posts_one_style">
-                                <?php $this->display_checkbox('extposts_ids_posts_one_style') ?>
-                                Включить первый стиль вывода блоков
+                                    <?php $this->display_checkbox('extposts_ids_posts_one_style') ?>
+                                    Включить блок
                                 </label>
                             </div>
                             <div class="form-group">
-                                <label for="extposts_id_nyhnovo_posta">Заголовок перед блоком</label>
                                 <?php $this->display_input_text('extposts_id_nyhnovo_posta') ?>
+                                <label for="extposts_id_nyhnovo_posta">ID постов которые нужно вывести, записывать через запятую</label>
                             </div>
                         </div>
-                    </div>
+                        <div class="col-md-10">
+                        <hr>
+                        </div>
+                         <div class="col-md-3">
+                            <img  src="http://best7casino.us/wp-content/uploads/2016/11/block_two.jpg" class="img_one_admin_block">
+                        </div>
+                        <div class="col-md-3">    
+                             <div class="form-group">
+                                <label for="extposts_ids_posts_two_style">
+                                    <?php $this->display_checkbox('extposts_ids_posts_two_style') ?>
+                                    Включить блок
+                                </label>
+                            </div>
+                            <div class="form-group">
+                            <?php $this->display_input_text('extposts_id_nyhnovo_posta') ?>
+                            <label for="extposts_id_nyhnovo_posta">ID постов которые нужно вывести, записывать через запятую</label>
+                            </div>
+                        </div>
+                         <div class="col-md-10">
+                         <hr>
+                        </div>
+                         <div class="col-md-3">
+                            <img  src="http://best7casino.us/wp-content/uploads/2016/11/block_three.jpg" style="width: 150px;padding-left: 131px;" class="img_one_admin_block">
+                        </div>
+                        <div class="col-md-3">    
+                             <div class="form-group">
+                                <label for="extposts_ids_posts_three_style">
+                                    <?php $this->display_checkbox('extposts_ids_posts_three_style') ?>
+                                    Включить блок
+                                </label>
+                            </div>
+                            <div class="form-group">
+                            <?php $this->display_input_text('extposts_id_nyhnovo_posta') ?>
+                            <label for="extposts_id_nyhnovo_posta">ID постов которые нужно вывести, записывать через запятую</label>
+                            </div>
+                        </div>
+                        <div class="col-md-10">
+                        <hr>
+                        </div>
+                         <div class="col-md-3">
+                            <img  src="http://best7casino.us/wp-content/uploads/2016/11/block_four.jpg"  class="img_one_admin_block">
+                        </div>
+                        <div class="col-md-3">    
+                             <div class="form-group">
+                                <label for="extposts_ids_posts_four_style">
+                                    <?php $this->display_checkbox('extposts_ids_posts_four_style') ?>
+                                    Включить блок
+                                </label>
+                            </div>
+                            <div class="form-group">
+                            <?php $this->display_input_text('extposts_id_nyhnovo_posta') ?>
+                            <label for="extposts_id_nyhnovo_posta">ID постов которые нужно вывести, записывать через запятую</label>
+                            </div>
+                        </div>
+                        <div class="col-md-10">
+                        <hr>
+                        </div>
+                         <div class="col-md-3">
+                            <img  src="http://best7casino.us/wp-content/uploads/2016/11/block_sixten.jpg" style="width: 231px;padding-left: 75px;" class="img_one_admin_block">
+                        </div>
+                        <div class="col-md-3">    
+                             <div class="form-group">
+                                <label for="extposts_ids_posts_five_style">
+                                    <?php $this->display_checkbox('extposts_ids_posts_five_style') ?>
+                                    Включить блок
+                                </label>
+                            </div>
+                            <div class="form-group">
+                            <?php $this->display_input_text('extposts_id_nyhnovo_posta') ?>
+                            <label for="extposts_id_nyhnovo_posta">ID постов которые нужно вывести, записывать через запятую</label>
+                            </div>
+                        </div>
+                        <div class="col-md-10">
+                        <p>http://verybitcoinslotsgambling.xyz/</p>
+                        <p>http://casinoideal.me/</p>
+                        <p>http://takeslotscasino.us/</p>
+                        <p>http://bitcasino-reviews.com/</p>
+                        </div>
+                   </div>
                 </div>
-
 
 
 
