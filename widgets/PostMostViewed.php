@@ -29,7 +29,6 @@ class WEBMFT_PostMostViewed_Widget extends WP_Widget {
 			echo $args['before_title'] . $title . $args['after_title'];
 		}
 
-		
 		$cat    = isset($instance['cat']) ? $instance['cat']:'';
 		$num    = isset($instance['num']) ? $instance['num']:'5';
 		$key    = isset($instance['key']) ? $instance['key']:'views';
