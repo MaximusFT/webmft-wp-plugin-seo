@@ -29,6 +29,8 @@ class WebMFT_SEO_Admin extends WebMFT_SEO {
 
 	function add_options_page(){
 		add_menu_page( 'WebMFT: SEO', 'WebMFT: SEO', 'manage_options', 'webmft_seo', array(&$this, 'options_page_output'), 'dashicons-shield', 6);
+        add_submenu_page( 'webmft_seo', 'Robots & htaccess', 'Robots & htaccess', 'manage_options', 'webmft_seo_files', array( $this, 'webmft_seo_files' ));
+        add_submenu_page( 'webmft_seo', 'Список изменений', 'Список изменений', 'manage_options', 'webmft_seo_changelog', array( $this, 'webmft_seo_changelog' ));
 	}
 
 	function options_page_output(){
@@ -39,7 +41,7 @@ class WebMFT_SEO_Admin extends WebMFT_SEO {
 
             <form method="post" action="options.php" class="js-webmft-form">
 				<?php
-				settings_fields('webmft_settings');  // скрытые защитные поля
+				    settings_fields('webmft_settings');  // скрытые защитные поля
 				?>
 
                 <h2 class="nav-tab-wrapper webmft-tab-wrapper js-tab-wrapper">
@@ -52,9 +54,11 @@ class WebMFT_SEO_Admin extends WebMFT_SEO {
                     <a class="nav-tab" id="extposts-tab" href="#top#nupopposts">Widget on Front</a>
                     <a class="nav-tab" id="extidpost-tab" href="#top#nupopidposts">Id Posts</a>
                 </h2>
+
                 <?php
                 submit_button();
                 ?>
+
                 <div id="postview" class="wp-webmft-tab js-tab-item active">
                     <h3>Post viewes</h3>
                     <div class="form-group">
@@ -223,13 +227,12 @@ class WebMFT_SEO_Admin extends WebMFT_SEO {
                                 <p class="form-text">Example: //site.com/piwik/</p>
                             </div>
                         </div>
-                    </div>
+                   </div>
                 </div>
                 <div id="hidelinks" class="wp-webmft-tab js-tab-item">
                     <div class="row">
                         <div class="col-md-5">
                             <h4>Setup Links</h4>
-                           
                             <div class="form-group">
                                 <label for="goto_provider_def">Link Default</label>
                                 <?php $this->display_input_text('goto_provider_def') ?>
@@ -283,7 +286,45 @@ class WebMFT_SEO_Admin extends WebMFT_SEO {
                                     <?php $this->display_checkbox('extlinks_is') ?>
                                         External Links is active?
                                 </label>
+
                             </div>
+                            <h4>Включение рейтинга постов</h4>
+                            <div class="form-group">
+                                <label for="extposts_vuvod_reting">
+                                    <?php $this->display_checkbox('extposts_vuvod_reting') ?>
+                                    Включить/Выключить вывод рейтинга
+
+                                </label><br><stong class="vuvod_reting">Работает только если активна функция "External Links is active?"</stong>
+                            </div>
+                            <div class="col-md-12">
+                                <hr><h4>Настройка цвета кнопки которая выводиться после текста поста</h4>
+                            </div>
+                             <div class="col-md-12">
+                                    <div class="col-md-2">
+                                        <h5>Цвет кнопки</h5>
+                                         <div class="form-group">
+                                             <?php $this->display_input_text('goto_play_for_button', 'color') ?>
+                                         </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                    <h5>Цвет текста</h5>
+                                         <div class="form-group">
+                                             <?php $this->display_input_text('goto_play_for_button_text', 'color') ?>
+                                         </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <h5>Цвет кнопки:hover</h5>
+                                         <div class="form-group">
+                                             <?php $this->display_input_text('goto_play_for_button_hover', 'color') ?>
+                                         </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                    <h5>Цвет текста:hover</h5>
+                                         <div class="form-group">
+                                             <?php $this->display_input_text('goto_play_for_button_text_hover', 'color') ?>
+                                         </div>
+                                    </div>
+                                </div> 
                         </div>
                         <div class="col-md-5">
                             <h4>Setup CSS</h4>
@@ -308,7 +349,8 @@ class WebMFT_SEO_Admin extends WebMFT_SEO {
                                 </label>
                             </div>
                         </div>
-                    <div class="col-md-3">
+
+                        <div class="col-md-3">
                             <h4>Переключить язик мета-тегах на русский</h4>
                             <div class="form-group">
                                 <label for="extposts_yazik_meta_retings">
@@ -319,16 +361,7 @@ class WebMFT_SEO_Admin extends WebMFT_SEO {
                             </div>
                         </div>
 
-                     <div class="col-md-3">
-                            <h4>Включение рейтинга постов</h4>
-                            <div class="form-group">
-                                <label for="extposts_vuvod_reting">
-                                    <?php $this->display_checkbox('extposts_vuvod_reting') ?>
-                                    Включить/Выключить вывод рейтинга
-                                </label>
-                            </div>
-                        </div>
-                     <div class="col-md-10">
+                        <div class="col-md-10">
                             <h4>Управление выводом блоков</h4>
                             <div class="form-group">
                                 <label for="extposts_before_text">
@@ -338,13 +371,8 @@ class WebMFT_SEO_Admin extends WebMFT_SEO {
                             </div>
                         </div>
 
-
-
-
-
-                         <div class="col-md-2">
+                        <div class="col-md-2">
                             <h4>C наибольшим количеством просмотров</h4>
-                            
                             <div class="form-group">
                                 <label for="extposts_casino_reviews">
                                     <?php $this->display_checkbox('extposts_casino_reviews') ?>
@@ -369,10 +397,6 @@ class WebMFT_SEO_Admin extends WebMFT_SEO {
                                 ID записывать через запятую
                             </div>
                         </div>
-
-
-
-
 
 
                         <div class="col-md-2">
@@ -480,29 +504,15 @@ class WebMFT_SEO_Admin extends WebMFT_SEO {
                                     $this->display_checkbox($catVklPaginasia);
                                     echo ' Включить добавление приставки - page</label></div>';
 
-                                     echo '<div class="form-group"><label for="'.$catVklPaginasiaMeta.'">';
+                                    echo '<div class="form-group"><label for="'.$catVklPaginasiaMeta.'">';
                                     $this->display_checkbox($catVklPaginasiaMeta);
                                     echo ' Включить добавление приставки - page в мета-теги</label></div>';
-                                  
                                     echo '<hr>';
                                 }
                                 ?>
                         </div>
-                       <div class="col-md-5">
-                            <h4>Выбор цвета для кнопки</h4>
-                                <div class="form-group">
-                                <label for="goto_dasdasd">goto_dasdasd: <?php echo $this->options['goto_dasdasd'];?> </label>
-                                <?php $this->display_input_text('goto_dasdasd', 'color') ?>
-                            </div>
-                            <a href="#" class="myButton" style="background-color:<?php echo $this->options['goto_dasdasd'];?>;">green</a>
-                       </div>
                     </div>
                 </div>
-
-
-
-
-
 
                 <div id="extidpost" class="wp-webmft-tab js-tab-item">
                     <div class="row">
@@ -516,20 +526,76 @@ class WebMFT_SEO_Admin extends WebMFT_SEO {
                             </div>
                         </div>    
                         <div class="col-md-3">
-                            <img  src="http://best7casino.us/wp-content/uploads/2016/11/one_block.jpg" class="img_one_admin_block">
+                            <img  src="http://best7casino.us/wp-content/uploads/2016/12/one_block.jpg" class="img_one_admin_block">
                         </div>
-                        <div class="col-md-3" style="top: 100px;">    
-                           <div class="form-group">
-                                <label for="extposts_ids_posts_one_style">
-                                    <?php $this->display_checkbox('extposts_ids_posts_one_style') ?>
-                                    Включить блок
-                                </label>
+                        <div class="col-md-3">    
+                                 <div class="form-group">
+                                    <label for="extposts_ids_posts_one_style">
+                                         <?php $this->display_checkbox('extposts_ids_posts_one_style') ?>
+                                         Включить блок
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                <?php $this->display_input_text('extposts_id_nyhnovo_posta_ones') ?>
+                                <label for="extposts_id_nyhnovo_posta_ones">ID постов которые нужно вывести, записывать через запятую</label>
+                                </div>
+                            <div class="col-md-5">    
+                                <div class="form-group">
+                                <?php $this->display_input_text('zamena_visit') ?>
+                                <label for="zamena_visit">Заменяет слово "Visit"</label>
+                                </div>
                             </div>
-                            <div class="form-group">
-                                <?php $this->display_input_text('extposts_id_nyhnovo_posta') ?>
-                                <label for="extposts_id_nyhnovo_posta">ID постов которые нужно вывести, записывать через запятую</label>
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <?php $this->display_input_text('zamena_certified') ?>
+                                    <label for="zamena_certified">Заменяет слово "Certified"</label>
+                                </div>
+                            </div>
+                                 <div class="form-group">
+                                    <?php $this->display_input_text('zamena_play_now') ?>
+                                    <label for="zamena_play_now">Заменяет "Play now" на другое слово.</label>
+                                </div>
+                            <div class="col-md-5">    
+                                <div class="form-group">
+                                <?php $this->display_input_text('kolichestvo_front') ?>
+                                <label for="kolichestvo_front">Количество символов спереди</label>
+                                </div>
+                            </div>
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <?php $this->display_input_text('kolichestvo_back') ?>
+                                    <label for="kolichestvo_back">Количество символов сзади</label>
+                                </div>
                             </div>
                         </div>
+                        <div class="col-md-5">
+                            <div class="col-md-2">
+                                <h5>Выбор цвета кнопки</h5>
+                                <div class="form-group">
+                                <?php $this->display_input_text('goto_dasdasd_1', 'color') ?>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <h5>Цвет при наведении</h5>
+                                    <div class="form-group">
+                                    <?php $this->display_input_text('goto_dasdasd_1_hover', 'color') ?>
+                                    </div>
+                            </div>
+                       </div> 
+                        <div class="col-md-5"><hr>
+                            <div class="col-md-2">
+                                 <h5>Цвета Visit</h5>
+                                <div class="form-group">
+                                <?php $this->display_input_text('goto_dasdasd_visit', 'color') ?>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <h5>Цвета Certified</h5>
+                                    <div class="form-group">
+                                    <?php $this->display_input_text('goto_dasdasd_certified', 'color') ?>
+                                    </div>
+                            </div>
+                       </div>
                         <div class="col-md-10">
                         <hr>
                         </div>
@@ -544,8 +610,42 @@ class WebMFT_SEO_Admin extends WebMFT_SEO {
                                 </label>
                             </div>
                             <div class="form-group">
-                            <?php $this->display_input_text('extposts_id_nyhnovo_posta') ?>
-                            <label for="extposts_id_nyhnovo_posta">ID постов которые нужно вывести, записывать через запятую</label>
+                            <?php $this->display_input_text('id_nyhnovo_posta_style_2') ?>
+                            <label for="id_nyhnovo_posta_style_2">ID постов которые нужно вывести, записывать через запятую</label>
+                            </div>
+                             <div class="col-md-5"> 
+                                <div class="form-group">
+                                    <?php $this->display_input_text('zamena_play_block_2') ?>
+                                    <label for="zamena_play_block_2">Заменяет слово "Play"</label>
+                                </div>
+                            </div>
+                            <div class="col-md-5"> 
+                                <div class="form-group">
+                                    <?php $this->display_input_text('zamena_review_block_2') ?>
+                                    <label for="zamena_review_block_2">Заменяет слово "Review"</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-5"> 
+                            <div class="col-md-2"> 
+                                <h5>Цвет кнопки</h5>
+                                <div class="form-group">
+                                    <?php $this->display_input_text('goto_background_play_button', 'color') ?>
+                                </div>
+                                <h5>Цвет текста</h5>
+                                <div class="form-group">
+                                    <?php $this->display_input_text('goto_play_button', 'color') ?>
+                                </div>
+                            </div>
+                             <div class="col-md-2"> 
+                                <h5>Цвет кнопки:hover</h5>
+                                <div class="form-group">
+                                    <?php $this->display_input_text('goto_background_play_button_hover', 'color') ?>
+                                </div>
+                                 <h5>Цвет "Review"</h5>
+                                <div class="form-group">
+                                    <?php $this->display_input_text('goto_background_review', 'color') ?>
+                                </div>
                             </div>
                         </div>
                          <div class="col-md-10">
@@ -562,10 +662,38 @@ class WebMFT_SEO_Admin extends WebMFT_SEO {
                                 </label>
                             </div>
                             <div class="form-group">
-                            <?php $this->display_input_text('extposts_id_nyhnovo_posta') ?>
-                            <label for="extposts_id_nyhnovo_posta">ID постов которые нужно вывести, записывать через запятую</label>
+                            <?php $this->display_input_text('id_nyhnovo_posta_style_3') ?>
+                            <label for="id_nyhnovo_posta_style_3">ID постов которые нужно вывести, записывать через запятую</label>
                             </div>
+                            
                         </div>
+                        <div class="col-md-5">  
+                                 <div class="col-md-2">  
+                                     <h5>Цвет кнопки</h5>
+                                         <div class="form-group">
+                                             <?php $this->display_input_text('goto_btn_orange_button', 'color') ?>
+                                         </div>
+                                </div>
+                                <div class="col-md-2">  
+                                    <h5>Цвет кнопки:hover</h5>
+                                         <div class="form-group">
+                                             <?php $this->display_input_text('goto_btn_orange_button_hover', 'color') ?>
+                                         </div>
+                                </div>
+                                <div class="col-md-2">  
+                                     <h5>Цвет текста</h5>
+                                         <div class="form-group">
+                                             <?php $this->display_input_text('color_btn_orange_button', 'color') ?>
+                                         </div>
+                                </div>
+                                 <div class="col-md-2">  
+                                     <h5>Цвет border</h5>
+                                         <div class="form-group">
+                                             <?php $this->display_input_text('goto_btn_color_border', 'color') ?>
+                                         </div>
+                                </div>
+                        </div>
+                            
                         <div class="col-md-10">
                         <hr>
                         </div>
@@ -580,9 +708,45 @@ class WebMFT_SEO_Admin extends WebMFT_SEO {
                                 </label>
                             </div>
                             <div class="form-group">
-                            <?php $this->display_input_text('extposts_id_nyhnovo_posta') ?>
-                            <label for="extposts_id_nyhnovo_posta">ID постов которые нужно вывести, записывать через запятую</label>
+                            <?php $this->display_input_text('id_nyhnovo_posta_style_4') ?>
+                            <label for="id_nyhnovo_posta_style_4">ID постов которые нужно вывести, записывать через запятую</label>
                             </div>
+                            <div class="form-group">
+                            <?php $this->display_input_text('zamena_review_block_4') ?>
+                            <label for="zamena_review_block_4">Заменяет слово "Review"</label>
+                            </div>
+                        </div>
+                        <div class="col-md-5">  
+                                 <div class="col-md-2">  
+                                     <h5>Цвет кнопки</h5>
+                                         <div class="form-group">
+                                             <?php $this->display_input_text('goto_mrg_orange_button', 'color') ?>
+                                         </div>
+                                </div>
+                                <div class="col-md-2">  
+                                    <h5>Цвет кнопки:hover</h5>
+                                         <div class="form-group">
+                                             <?php $this->display_input_text('goto_mrg_orange_button_hover', 'color') ?>
+                                         </div>
+                                </div>
+                                <div class="col-md-2">  
+                                     <h5>Цвет текста</h5>
+                                         <div class="form-group">
+                                             <?php $this->display_input_text('color_mrg_orange_button', 'color') ?>
+                                         </div>
+                                </div>
+                                 <div class="col-md-2">  
+                                     <h5>Цвет фона</h5>
+                                         <div class="form-group">
+                                             <?php $this->display_input_text('goto_mrg_color_border', 'color') ?>
+                                         </div>
+                                </div>
+                                <div class="col-md-2">  
+                                     <h5>Цвет текста:hover</h5>
+                                         <div class="form-group">
+                                             <?php $this->display_input_text('goto_mrg_color_hover_text', 'color') ?>
+                                         </div>
+                                </div>
                         </div>
                         <div class="col-md-10">
                         <hr>
@@ -598,39 +762,278 @@ class WebMFT_SEO_Admin extends WebMFT_SEO {
                                 </label>
                             </div>
                             <div class="form-group">
-                            <?php $this->display_input_text('extposts_id_nyhnovo_posta') ?>
-                            <label for="extposts_id_nyhnovo_posta">ID постов которые нужно вывести, записывать через запятую</label>
+                            <?php $this->display_input_text('id_nyhnovo_posta_style_5') ?>
+                            <label for="id_nyhnovo_posta_style_5">ID постов которые нужно вывести, записывать через запятую</label>
                             </div>
                         </div>
+                        <div class="col-md-5">  
+                                 <div class="col-md-2">  
+                                     <h5>Цвет кнопки</h5>
+                                         <div class="form-group">
+                                             <?php $this->display_input_text('goto_ben_orange_button', 'color') ?>
+                                         </div>
+                                </div>
+                                <div class="col-md-2">  
+                                     <h5>Цвет текста</h5>
+                                         <div class="form-group">
+                                             <?php $this->display_input_text('color_ben_orange_button', 'color') ?>
+                                         </div>
+                                </div>
+                                 <div class="col-md-2">  
+                                     <h5>Цвет фона</h5>
+                                         <div class="form-group">
+                                             <?php $this->display_input_text('goto_ben_color_background', 'color') ?>
+                                         </div>
+                                </div>
+                            </div>
                         <div class="col-md-10">
-                        <p>http://verybitcoinslotsgambling.xyz/</p>
-                        <p>http://casinoideal.me/</p>
-                        <p>http://takeslotscasino.us/</p>
-                        <p>http://bitcasino-reviews.com/</p>
+                            <hr>
+                                <p>нужно доработать http://verybitcoinslotsgambling.xyz/</p>
+                        </div>
+                        <div class="col-md-10">
+                                <div class="col-md-4">
+                            <img  src="http://best7casino.us/wp-content/uploads/2016/12/style_6.jpg" class="img_one_admin_block">
+                            </div>
+                            <div class="col-md-3">    
+                             <div class="form-group">
+                                <label for="extposts_ids_posts_six_style">
+                                    <?php $this->display_checkbox('extposts_ids_posts_six_style') ?>
+                                    Включить блок
+                                </label>
+                            </div>
+                            <div class="form-group">
+                            <?php $this->display_input_text('id_nyhnovo_posta_style_6') ?>
+                            <label for="id_nyhnovo_posta_style_6">ID постов которые нужно вывести, записывать через запятую</label>
+                            </div>
+                        </div>
+                        </div>
+                        <div class="col-md-10">
+                        <hr>
+                        </div>
+                         <div class="col-md-10">
+                                <div class="col-md-4">
+                            <img  src="http://best7casino.us/wp-content/uploads/2016/12/style_7.jpg" class="img_one_admin_block">
+                            </div>
+                            <div class="col-md-3">    
+                             <div class="form-group">
+                                <label for="extposts_ids_posts_seven_style">
+                                    <?php $this->display_checkbox('extposts_ids_posts_seven_style') ?>
+                                    Включить блок
+                                </label>
+                            </div>
+                            <div class="form-group">
+                            <?php $this->display_input_text('id_nyhnovo_posta_style_7') ?>
+                            <label for="id_nyhnovo_posta_style_7">ID постов которые нужно вывести, записывать через запятую</label>
+                            </div>
+                            <div class="form-group">
+                            <?php $this->display_input_text('kolichestvo_simvolo') ?>
+                            <label for="kolichestvo_simvolo">Количество символов</label>
+                            </div>
+                            <div class="form-group">
+                            <?php $this->display_input_text('zamena_review_style_6') ?>
+                            <label for="zamena_review_style_6">Замена "Review"</label>
+                            </div>
+                        </div>
+                            <div class="col-md-3">  
+                                <div class="col-md-2">  
+                                     <h5>Цвет фона</h5>
+                                         <div class="form-group">
+                                             <?php $this->display_input_text('button_my_my_background', 'color') ?>
+                                         </div>
+                                </div>
+                                <div class="col-md-2">  
+                                     <h5>Цвет фона:hover</h5>
+                                        <div class="form-group">
+                                            <?php $this->display_input_text('button_my_my_background_hover', 'color') ?>
+                                        </div>
+                                </div>
+                                 <div class="col-md-2">  
+                                     <h5>Цвет текста review</h5>
+                                        <div class="form-group">
+                                            <?php $this->display_input_text('button_my_my_button_review', 'color') ?>
+                                        </div>
+                                </div>
+                                 <div class="col-md-2">  
+                                     <h5>Цвет текста review:hover</h5>
+                                        <div class="form-group">
+                                            <?php $this->display_input_text('button_my_my_button_review_hover', 'color') ?>
+                                        </div>
+                                </div>
+                                <div class="col-md-2">  
+                                     <h5>Цвет кнопки</h5>
+                                        <div class="form-group">
+                                            <?php $this->display_input_text('goto_button_my_my_button', 'color') ?>
+                                        </div>
+                                </div>
+                                <div class="col-md-2">  
+                                     <h5>Цвет кнопки:hover</h5>
+                                        <div class="form-group">
+                                            <?php $this->display_input_text('goto_button_my_my_button_hover', 'color') ?>
+                                        </div>
+                                </div>
+                                <div class="col-md-2">  
+                                     <h5>Цвет текста кнопки</h5>
+                                        <div class="form-group">
+                                            <?php $this->display_input_text('goto_button_my_my_text', 'color') ?>
+                                        </div>
+                                </div>
+                                <div class="col-md-2">  
+                                     <h5>Цвет текста кнопки:hover</h5>
+                                        <div class="form-group">
+                                            <?php $this->display_input_text('goto_button_my_my_text_hover', 'color') ?>
+                                        </div>
+                                </div>
+                            </div>
                         </div>
                    </div>
                 </div>
 
-
-
-
-
-
-
-
-
-
-
-                
-				<?php
-				submit_button();
-
-				?>
+                <div id="extidpostsdvsdvv" class="wp-webmft-tab js-tab-item">
+                </div>
 			</form>
 		</div>
-		<?php 
-	}
+    <?php
+    }
 
+    function webmft_seo_files(){
+    ?>
+        <div class="wrap">
+            <h1>WebMFT: SEO useful</h1>
+            <h3>Настройки</h3>
+
+            <form method="post" action="options.php" class="js-webmft-form">
+                <?php
+                settings_fields('webmft_settings');  // скрытые защитные поля
+                ?>
+
+                <h2 class="nav-tab-wrapper webmft-tab-wrapper js-tab-wrapper">
+                    <a class="nav-tab nav-tab-active" id="robots-tab" href="#top#robots">Edit robots.txt</a>
+                    <a class="nav-tab" id="htaccess-tab" href="#top#htaccess">htaccess</a>
+                </h2>
+                <?php
+                submit_button();
+                ?>
+
+                <div id="robots" class="wp-webmft-tab js-tab-item active">
+                    <div class="row">
+                        <div class="col-md-10">
+                            <p><strong>Плагин WebMFT: SEO useful создает виртуальный robots.txt, для поискового робота разницы между виртуальным и физическим файлом нет</strong></p>
+                            <label for="right_robots_txt">
+                                <?php $this->display_checkbox('right_robots_txt') ?>
+                                Создает robots.txt
+                            </label>
+                        </div>
+
+                        <div class="col-md-5">
+                            <label for="vuvod_block_recomendacia">
+                                <br><?php $this->display_checkbox('vuvod_block_recomendacia') ?>
+                                    Добавляет рекомендации плагина WebMFT: SEO useful.<br>
+                                    <strong>Если вы перед этим скопировали robots.txt согласно правилам то плагин добавит рекомендации в конец, после вашего текста и вы сможете сами решить что вам нужно, удалив не нужное.</strong>
+                            </label>
+                        </div>
+                        <div class="col-md-5">
+                            <label for="delete_robots_txt">
+                                <?php $this->display_checkbox('delete_robots_txt') ?>
+                                    Удалить файл robots.txt с хостинга<br>
+                                    <strong>Внимание!<br> Рекомендуеться снять галку сразу после удаления robots.txt<br>В противном случаее плагин будет удалять все файл robots.txt при попытке добавления их на хостинг</strong>
+                            </label>
+                        </div>
+
+                        <div class="col-md-10"><hr></div>
+
+                        <div class="col-md-5">
+                            <script>$('#robots_txt_text').val('');</script>
+                            <p>Автоматически создает идеальный robots.txt</p>
+                            <?php $this->display_textarea_robots('robots_txt_text') ?><br>
+                        </div>
+                    <?php if ( file_exists(ABSPATH . 'robots.txt') ) { ?>
+                        <div class="col-md-5">
+                            <p class="warning_robots_txt"><strong>Внимание! Обнаружен файл robots.txt</strong></p>
+                            <p><strong>Если вы читаете это сообщение - значит плагин ещё не создал свой robots.txt, для того что бы плагин заработал нужно удалить (при желании скопировать) ваш robots.txt который храниться на сервере.<br>С помощью плагина WebMFT: SEO useful вы можете сделать это не выходя из админки.</strong></p>
+                            <p><strong> Для этого выполните следующее:</strong></p>
+                                <ul style="list-style-type: disc;margin-left: 55px;">
+                                    <li>Нажмите на кнопку "Скопировать содержимое файла в форму рядом" и нажмите "сохранить", плагин сам скопирует файл</li>
+                                    <li>Нужмите кнопку удалить файл robots.txt и нажмите "сохранить"</li>
+                                </ul>
+                                <?php $this->display_checkbox('vuvod_block_bes_robot'); ?>
+                                <label for="vuvod_block_bes_robot">Скопировать содержимое файла в форму рядом</label>
+                                <p><strong>Ваш robots.txt</strong></p>
+                                <textarea class="textaria_OK_robots_txt"> <?php print_r(file_get_contents(ABSPATH . 'robots.txt')); ?> </textarea>
+                        </div>
+                    <?php } ?>
+                    </div>
+                </div>
+
+                <div id="htaccess" class="wp-webmft-tab js-tab-item active">
+                    <div class="row">
+                        <div class="col-md-10">
+                            <?php//  require 'inc/require/htaccess_php.php'; ?>
+                            <div class="wrap">
+                                <h2 class="wphe-titles">WP Htaccess Editor</h2>
+                                <div class="postbox wphe-box">
+                                    <?
+                                    if ($this->options['ht_content']) {
+                                        $WPHE_new_content = $this->options['ht_content'];
+                                        $WPHE_orig_path = ABSPATH.'.htaccess';    
+                                        $WPHE_new_content = trim($WPHE_new_content);
+                                        $WPHE_new_content = str_replace('\\\\', '\\', $WPHE_new_content);
+                                        $WPHE_new_content = str_replace('\"', '"', $WPHE_new_content);
+                                        $WPHE_write_success = file_put_contents($WPHE_orig_path, $WPHE_new_content, LOCK_EX);  
+                                    }
+                                    $this->options['ht_content'] = file_get_contents(ABSPATH . '.htaccess', false, NULL);
+                                    ?>
+                                    <h3 class="wphe-title">Content of the Htaccess file</h3>
+                                    <?php $this->display_textarea('ht_content', 'wphe-textarea', true) ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <?php
+                submit_button();
+                ?>
+
+            </form>
+        </div>
+
+    <?php
+    }
+
+    function webmft_seo_changelog(){
+    ?>
+        <div class="WEBMFTwrap">
+            <h1>Список изменений</h1>
+            <div class="WEBMFTelog">
+                <div class="WEBMFT_item">
+                    <strong class="WEBMFT_version">1.8.7</strong>
+                    <ul>
+                        <li>Обнова ещё не вышла</li>
+                        <li>Добавлено: возможность создания правильного на наш взгляд robots.txt</li>
+                        <li>Добавлено: возможность редактирование robots.txt с админки сайта</li>
+                        <li>Добавлено: возможность вывода блоков по заданным ID на главной странице с разными стилями</li>
+                        <li>Добавлено: возможность менять цвет кнопки которая выводиться после тела поста</li>
+                        <li>Добавлено: возможность копирования содержимого файла robots.txt и удаления его с сервера не выходя с админки</li>
+                        <li><strong>Доработать: очистку полей после действий</strong></li>
+                        <li><strong>Доработать: возможность редактировать файл <a href="http://wp-kama.ru/hook/mod_rewrite_rules">.htaccess</a> c админки</strong></li>
+                        <li><strong>Доработать: изменения <a href="http://www.websphererus.com/others/hide-url-wordpress-console">пути к админке через .htaccess</a> c админки</strong></li>
+                        <li><strong>Доработать: <a href="http://isif-life.ru/blogovedenie/skript-yvelicheniya-izobrageniya-wordpress-bez-plaginov.html">внедрение скрипта</a>, при клике на фотку она увеличивалась</strong></li>
+                        <li><strong>Доработать: заменить target='_blank' на JS\Qwery скрипт для увеличения скорости</strong></li>
+                        <li><strong>Доработать: вывод блока №6</strong></li>
+                        <li><strong>Доработать: автоматическую заливку на хост фоток и файлов плагина для скрытие путей плагина</strong></li>
+                        <li><strong>Доработать: возможность включение <a href="http://wp-kama.ru/id_541/samyie-hlebnyie-kroshki-breabcrumbs-dlya-wordpress.html">хлебных крошек</a></strong></li>
+                        <li><strong>Доработать: добавить функцию Invisible Captcha <a href="http://isif-life.ru/web/plagin-invisible-captcha-nevidimaya-kapcha-dlya-wordpress.html">из этого сайта</a></strong></li>
+                        <li><strong>Доработать: ограничение на количество входов в админку</strong></li>
+                        <li><strong>Доработать: двойная авторизация</strong></li>
+                        <li><strong>Доработать: сделать возможность менять эффекты на фотках в постах</strong></li>
+                    </ul>
+
+
+                </div>
+            </div>
+
+        </div> <?php
+    } 
     /**
      * Display option checkbox
      *
@@ -660,12 +1063,91 @@ class WebMFT_SEO_Admin extends WebMFT_SEO {
      *
      * @param string $name
      */
-    public function display_textarea( $name ) {
+    public function display_textarea( $name, $class='form-control', $wpar = false ) {
+        $wrap = ($wrap) ? 'wrap="off"' : '';
         $value = '';
         if (isset($this->options[$name]) && ! empty($this->options[$name])) $value = $this->options[$name];
-        $string = '<textarea name="'.$this->option_name.'['.$name .']" id="'.$name.'" class="form-control" rows="7" autocomplete="off">'.$value.'</textarea>';
+        $string = '<textarea name="'.$this->option_name.'['.$name .']" id="'.$name.'" class="'.$class.'" rows="7" autocomplete="off" '.$wrap.'>'.$value.'</textarea>';
         echo $string;
     }
+
+    /**
+     * Display textarea field
+     *
+     * @param string $name
+     */
+    public function display_textarea_robots( $name ) {
+         $value = '';
+        if (isset($this->options[$name]) && ! empty($this->options[$name])) $value = $this->options[$name];   
+        if (!empty($this->options['delete_robots_txt']) ) { unlink(ABSPATH . 'robots.txt'); }
+        if ( empty( $value ) ) {
+            $plugin = new WebMFT_SEO();
+            $value = $plugin->right_robots_txt( '' );
+            if (!empty($this->options['vuvod_block_recomendacia']) ) { 
+                $value = '';
+                $string = '<textarea name="' . $this->option_name . '[' . $name . ']" id="' . $name . '" class="form-control" style="height: 500px;">'. $value .'</textarea>';
+            }
+            if (!empty($this->options['vuvod_block_bes_robot']) ) {
+                $value = '';
+                $value .= file_get_contents(ABSPATH . 'robots.txt');
+                $string = '<textarea name="' . $this->option_name . '[' . $name . ']" id="' . $name . '" class="form-control" style="height: 500px;">'. $value .'</textarea>';
+            }
+            if (!empty($this->options['vuvod_block_bes_robot']) && !empty($this->options['vuvod_block_recomendacia']) ) {
+                $value = '';
+                $plugin = new WebMFT_SEO();
+                $value = $plugin->right_robots_txt( '' );
+                $value = file_get_contents(ABSPATH . 'robots.txt') . $value;
+                $string = '<textarea name="' . $this->option_name . '[' . $name . ']" id="' . $name . '" class="form-control" >'. $value .'</textarea>';
+            }
+        }
+        $string = '<textarea name="' . $this->option_name . '[' . $name . ']" id="' . $name . '" class="form-control" style="height: 500px;">'. $value .'</textarea>';
+        echo $string;
+    }
+
+
+
+
+
+
+
+
+
+
+ public function display_textarea_htacess( $name ) {
+         $value = '';
+        if (isset($this->options[$name]) && ! empty($this->options[$name])) $value = $this->options[$name];   
+      
+    if ( empty( $value ) ) {
+        $WPHE_orig_path = ABSPATH.'.htaccess';
+        if(!file_exists($WPHE_orig_path)){
+            $value = 'Htaccess file does not exists!';
+            
+        }else{
+            
+            if(!is_readable($WPHE_orig_path)){
+                $value = 'Htaccess file cannot read!<';
+                $success = false;
+            } else
+                @chmod($WPHE_orig_path, 0644);
+                $WPHE_htaccess_content = file_get_contents($WPHE_orig_path);
+                if($WPHE_htaccess_content === false){
+                    $value = 'Htaccess file cannot read!';
+                    
+                }else{
+             $WPHE_orig_path = file_get_contents(ABSPATH. '.htaccess');
+             $value = $WPHE_orig_path;
+                }
+            
+        }   
+       
+    }
+        $string = '<textarea name="' . $this->option_name . '[' . $name . ']" id="' . $name . '" class="form-control" style="height: 500px;">'. $value .'</textarea>';
+        echo $string;
+    }
+
+
+
+
 
     /**
      * Display input number field
@@ -695,7 +1177,6 @@ class WebMFT_SEO_Admin extends WebMFT_SEO {
     public function display_select( $name , $values ) {
         if (isset($this->options[$name]) && ! empty($this->options[$name])) $value = $this->options[$name];
         $string  = '<select class="form-control" name="'.$this->option_name.'['.$name.']" id="'.$name.'">';
-
         if (is_array( $values )) {
             foreach ($values as $key => $value) {
                 $selected = '';
@@ -704,7 +1185,6 @@ class WebMFT_SEO_Admin extends WebMFT_SEO {
                 $string .= '<option value="'.$key.'"'. $selected .'>'.$value.'</option>';
             }
         }
-
         $string .= '</select>';
         echo $string;
     }
